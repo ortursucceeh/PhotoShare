@@ -21,7 +21,6 @@ class User(Base):
     is_verify = Column(Boolean, default=False)
     
 
-    
 post_m2m_hashtag = Table(
     "post_m2m_hashtag",
     Base.metadata,
@@ -49,6 +48,7 @@ class Post(Base):
     rating = relationship('Rating', backref="post_id")
     user = relationship('User', backref="posts")
     
+    
 class Hashtag(Base):
     __tablename__ = 'hashtags'
     id = Column(Integer, primary_key=True)
@@ -56,6 +56,7 @@ class Hashtag(Base):
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
 
     user = relationship('User', backref="hashtags")
+    
     
 class Comment(Base):
     __tablename__ = 'comments'
