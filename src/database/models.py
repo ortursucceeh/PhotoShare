@@ -71,8 +71,8 @@ class Rating(Base):
     __tablename__ = 'ratings'
     id = Column(Integer, primary_key=True)
     rate = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=func.now)
-    updated_at = Column(DateTime, default=func.now)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
     post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), nullable=False)
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     
