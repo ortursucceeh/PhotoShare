@@ -585,7 +585,7 @@
         "kind": 6,
         "importPath": "src.database.models",
         "description": "src.database.models",
-        "peekOfCode": "class User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now())\n    role = Column(String(20), nullable=False)\n    refresh_token = Column(String(255), nullable=True)",
+        "peekOfCode": "class User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now)\n    role = Column(String(20), nullable=False)\n    refresh_token = Column(String(255), nullable=True)",
         "detail": "src.database.models",
         "documentation": {}
     },
@@ -603,7 +603,7 @@
         "kind": 6,
         "importPath": "src.database.models",
         "description": "src.database.models",
-        "peekOfCode": "class Hashtag(Base):\n    __tablename__ = 'hashtags'\n    id = Column(Integer, primary_key=True)\n    title = Column(String(25), nullable=False, unique=True)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"hashtags\")\nclass Comment(Base):\n    __tablename__ = 'comments'\n    id = Column(Integer, primary_key=True)\n    created_at = Column(DateTime, default=func.now)",
+        "peekOfCode": "class Hashtag(Base):\n    __tablename__ = 'hashtags'\n    id = Column(Integer, primary_key=True)\n    title = Column(String(25), nullable=False, unique=True)\n    created_at = Column(DateTime, default=func.now)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    done = Column(Boolean, default=False) # for update\n    user = relationship('User', backref=\"hashtags\")\nclass Comment(Base):\n    __tablename__ = 'comments'",
         "detail": "src.database.models",
         "documentation": {}
     },
@@ -612,7 +612,7 @@
         "kind": 6,
         "importPath": "src.database.models",
         "description": "src.database.models",
-        "peekOfCode": "class Comment(Base):\n    __tablename__ = 'comments'\n    id = Column(Integer, primary_key=True)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"posts\")\n    post = relationship('Post', backref=\"comments\")\nclass Rating(Base):",
+        "peekOfCode": "class Comment(Base):\n    __tablename__ = 'comments'\n    id = Column(Integer, primary_key=True)\n    text = Column(Text, nullable=False)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), default=None)\n    done = Column(Boolean, default=False) # for update\n    user = relationship('User', backref=\"posts\")",
         "detail": "src.database.models",
         "documentation": {}
     },
@@ -621,7 +621,7 @@
         "kind": 6,
         "importPath": "src.database.models",
         "description": "src.database.models",
-        "peekOfCode": "class Rating(Base):\n    __tablename__ = 'ratings'\n    id = Column(Integer, primary_key=True)\n    rate = Column(Integer, nullable=False)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), nullable=False)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"ratings\")\n    post = relationship('Post', backref=\"rating\")",
+        "peekOfCode": "class Rating(Base):\n    __tablename__ = 'ratings'\n    id = Column(Integer, primary_key=True)\n    rate = Column(Integer, nullable=False)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), nullable=False)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    done = Column(Boolean, default=False) # for update\n    user = relationship('User', backref=\"ratings\")",
         "detail": "src.database.models",
         "documentation": {}
     },
@@ -630,7 +630,7 @@
         "kind": 5,
         "importPath": "src.database.models",
         "description": "src.database.models",
-        "peekOfCode": "Base = declarative_base()\nclass User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now())\n    role = Column(String(20), nullable=False)",
+        "peekOfCode": "Base = declarative_base()\nclass User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now)\n    role = Column(String(20), nullable=False)",
         "detail": "src.database.models",
         "documentation": {}
     },
