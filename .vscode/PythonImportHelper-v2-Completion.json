@@ -169,6 +169,30 @@
         "documentation": {}
     },
     {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "EmailStr",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "Field",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
         "label": "sessionmaker",
         "importPath": "sqlalchemy.orm",
         "description": "sqlalchemy.orm",
@@ -254,6 +278,38 @@
         "description": "sqlalchemy.sql",
         "isExtraImport": true,
         "detail": "sqlalchemy.sql",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Enum",
+        "importPath": "enum",
+        "description": "enum",
+        "isExtraImport": true,
+        "detail": "enum",
         "documentation": {}
     },
     {
@@ -668,6 +724,186 @@
         "description": "src.main",
         "peekOfCode": "app = FastAPI()\n# app.include_router(tags.router, prefix='/api')\n# app.include_router(notes.router, prefix='/api')\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello PhotoShare\"}\n@app.get(\"/api/healthchecker\")\ndef healthchecker(db: Session = Depends(get_db)):\n    try:\n        # Make request",
         "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "Role",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class Role(str, Enum):\n    admin = 'Administrator'\n    moder = 'Moderator'\n    user = 'User'\nclass UserModel(BaseModel):\n    username: str = Field(min_length=5, max_length=25)\n    email: EmailStr\n    password: str = Field(min_length=6, max_length=25)\n    role: Role\n    avatar: Optional[str]",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "UserModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class UserModel(BaseModel):\n    username: str = Field(min_length=5, max_length=25)\n    email: EmailStr\n    password: str = Field(min_length=6, max_length=25)\n    role: Role\n    avatar: Optional[str]\nclass UserDb(BaseModel):\n    id: int\n    username: EmailStr\n    email: str",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "UserDb",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class UserDb(BaseModel):\n    id: int\n    username: EmailStr\n    email: str\n    role: Role\n    avatar: Optional[str]\n    created_at: datetime\n    class Config:\n        orm_mode = True\nclass UserResponse(BaseModel):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "UserResponse",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class UserResponse(BaseModel):\n    user: UserDb\n    detail: str = \"User successfully created\"\nclass TokenModel(BaseModel):\n    access_token: str\n    refresh_token: str\n    token_type: str = \"bearer\"\n# Hashtag\nclass HashtagBase(BaseModel):\n    title: str = Field(max_length=500)",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TokenModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class TokenModel(BaseModel):\n    access_token: str\n    refresh_token: str\n    token_type: str = \"bearer\"\n# Hashtag\nclass HashtagBase(BaseModel):\n    title: str = Field(max_length=500)\nclass HashtagModel(HashtagBase):\n    pass\nclass HashtagResponse(HashtagModel):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "HashtagBase",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class HashtagBase(BaseModel):\n    title: str = Field(max_length=500)\nclass HashtagModel(HashtagBase):\n    pass\nclass HashtagResponse(HashtagModel):\n    id: int\n    created_at: datetime\n    class Config:\n        orm_mode = True\n# Comment",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "HashtagModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class HashtagModel(HashtagBase):\n    pass\nclass HashtagResponse(HashtagModel):\n    id: int\n    created_at: datetime\n    class Config:\n        orm_mode = True\n# Comment\nclass CommentBase(BaseModel):\n    text: str = Field(max_length=500)",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "HashtagResponse",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class HashtagResponse(HashtagModel):\n    id: int\n    created_at: datetime\n    class Config:\n        orm_mode = True\n# Comment\nclass CommentBase(BaseModel):\n    text: str = Field(max_length=500)\nclass CommentModel(CommentBase):\n    pass",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "CommentBase",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class CommentBase(BaseModel):\n    text: str = Field(max_length=500)\nclass CommentModel(CommentBase):\n    pass\nclass CommentUpdate(CommentModel):\n    done = bool\nclass CommentResponse(CommentModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "CommentModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class CommentModel(CommentBase):\n    pass\nclass CommentUpdate(CommentModel):\n    done = bool\nclass CommentResponse(CommentModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "CommentUpdate",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class CommentUpdate(CommentModel):\n    done = bool\nclass CommentResponse(CommentModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True\n# Rating\nclass RatingBase(BaseModel):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "CommentResponse",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class CommentResponse(CommentModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True\n# Rating\nclass RatingBase(BaseModel):\n    rate: float\nclass RatingModel(RatingBase):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RatingBase",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class RatingBase(BaseModel):\n    rate: float\nclass RatingModel(RatingBase):\n    pass\nclass RatingUpdate(RatingModel):\n    done = bool\nclass RatingResponse(RatingModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RatingModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class RatingModel(RatingBase):\n    pass\nclass RatingUpdate(RatingModel):\n    done = bool\nclass RatingResponse(RatingModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RatingUpdate",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class RatingUpdate(RatingModel):\n    done = bool\nclass RatingResponse(RatingModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True\n# Post\nclass PostBase(BaseModel):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RatingResponse",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class RatingResponse(RatingModel):\n    id: int\n    created_at: datetime\n    updated_at = datetime\n    class Config:\n        orm_mode = True\n# Post\nclass PostBase(BaseModel):\n    image_url: str = Field(max_length=300)\n    title: str",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "PostBase",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class PostBase(BaseModel):\n    image_url: str = Field(max_length=300)\n    title: str\n    descr: str = Field(max_length=450)\n    rating: float = None\nclass PostModel(PostBase):\n    hashtags: List[int]\nclass PostUpdate(PostModel):\n    done: bool \nclass PostResponse(PostBase):",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "PostModel",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class PostModel(PostBase):\n    hashtags: List[int]\nclass PostUpdate(PostModel):\n    done: bool \nclass PostResponse(PostBase):\n    id: int\n    hashtags: List[HashtagResponse]\n    created_at: datetime\n    updated_at: datetime\n    class Config:",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "PostUpdate",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class PostUpdate(PostModel):\n    done: bool \nclass PostResponse(PostBase):\n    id: int\n    hashtags: List[HashtagResponse]\n    created_at: datetime\n    updated_at: datetime\n    class Config:\n        orm_mode = True",
+        "detail": "src.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "PostResponse",
+        "kind": 6,
+        "importPath": "src.schemas",
+        "description": "src.schemas",
+        "peekOfCode": "class PostResponse(PostBase):\n    id: int\n    hashtags: List[HashtagResponse]\n    created_at: datetime\n    updated_at: datetime\n    class Config:\n        orm_mode = True",
+        "detail": "src.schemas",
         "documentation": {}
     }
 ]
