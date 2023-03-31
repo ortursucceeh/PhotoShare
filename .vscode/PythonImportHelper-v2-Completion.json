@@ -1,0 +1,673 @@
+[
+    {
+        "label": "op",
+        "importPath": "alembic",
+        "description": "alembic",
+        "isExtraImport": true,
+        "detail": "alembic",
+        "documentation": {}
+    },
+    {
+        "label": "context",
+        "importPath": "alembic",
+        "description": "alembic",
+        "isExtraImport": true,
+        "detail": "alembic",
+        "documentation": {}
+    },
+    {
+        "label": "sqlalchemy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "engine_from_config",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "pool",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "create_engine",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Boolean",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Column",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "DateTime",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "ForeignKey",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Integer",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Numeric",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "String",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Table",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Text",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "func",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "fileConfig",
+        "importPath": "logging.config",
+        "description": "logging.config",
+        "isExtraImport": true,
+        "detail": "logging.config",
+        "documentation": {}
+    },
+    {
+        "label": "Base",
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "isExtraImport": true,
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "SQLALCHEMY_DATABASE_URL",
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "isExtraImport": true,
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "isExtraImport": true,
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "BaseSettings",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "sessionmaker",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "declarative_base",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "relationship",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "src.conf.config",
+        "description": "src.conf.config",
+        "isExtraImport": true,
+        "detail": "src.conf.config",
+        "documentation": {}
+    },
+    {
+        "label": "Date",
+        "importPath": "sqlalchemy.sql.sqltypes",
+        "description": "sqlalchemy.sql.sqltypes",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.sql.sqltypes",
+        "documentation": {}
+    },
+    {
+        "label": "aggregated",
+        "importPath": "sqlalchemy_utils",
+        "description": "sqlalchemy_utils",
+        "isExtraImport": true,
+        "detail": "sqlalchemy_utils",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "text",
+        "importPath": "sqlalchemy.sql",
+        "description": "sqlalchemy.sql",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.sql",
+        "documentation": {}
+    },
+    {
+        "label": "upgrade",
+        "kind": 2,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "def upgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.create_table('users',\n    sa.Column('id', sa.Integer(), nullable=False),\n    sa.Column('username', sa.String(length=50), nullable=True),\n    sa.Column('email', sa.String(length=250), nullable=False),\n    sa.Column('password', sa.String(length=255), nullable=False),\n    sa.Column('avatar', sa.String(length=255), nullable=True),\n    sa.Column('created_at', sa.DateTime(), nullable=True),\n    sa.Column('role', sa.String(length=20), nullable=False),",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "downgrade",
+        "kind": 2,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "def downgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.drop_table('ratings')\n    op.drop_table('post_m2m_hashtag')\n    op.drop_table('comments')\n    op.drop_table('posts')\n    op.drop_table('hashtags')\n    op.drop_table('users')\n    # ### end Alembic commands ###",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "revision",
+        "kind": 5,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "revision = '02050b256105'\ndown_revision = None\nbranch_labels = None\ndepends_on = None\ndef upgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.create_table('users',\n    sa.Column('id', sa.Integer(), nullable=False),\n    sa.Column('username', sa.String(length=50), nullable=True),\n    sa.Column('email', sa.String(length=250), nullable=False),",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "down_revision",
+        "kind": 5,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "down_revision = None\nbranch_labels = None\ndepends_on = None\ndef upgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.create_table('users',\n    sa.Column('id', sa.Integer(), nullable=False),\n    sa.Column('username', sa.String(length=50), nullable=True),\n    sa.Column('email', sa.String(length=250), nullable=False),\n    sa.Column('password', sa.String(length=255), nullable=False),",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "branch_labels",
+        "kind": 5,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "branch_labels = None\ndepends_on = None\ndef upgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.create_table('users',\n    sa.Column('id', sa.Integer(), nullable=False),\n    sa.Column('username', sa.String(length=50), nullable=True),\n    sa.Column('email', sa.String(length=250), nullable=False),\n    sa.Column('password', sa.String(length=255), nullable=False),\n    sa.Column('avatar', sa.String(length=255), nullable=True),",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "depends_on",
+        "kind": 5,
+        "importPath": "migrations.versions.02050b256105_init",
+        "description": "migrations.versions.02050b256105_init",
+        "peekOfCode": "depends_on = None\ndef upgrade() -> None:\n    # ### commands auto generated by Alembic - please adjust! ###\n    op.create_table('users',\n    sa.Column('id', sa.Integer(), nullable=False),\n    sa.Column('username', sa.String(length=50), nullable=True),\n    sa.Column('email', sa.String(length=250), nullable=False),\n    sa.Column('password', sa.String(length=255), nullable=False),\n    sa.Column('avatar', sa.String(length=255), nullable=True),\n    sa.Column('created_at', sa.DateTime(), nullable=True),",
+        "detail": "migrations.versions.02050b256105_init",
+        "documentation": {}
+    },
+    {
+        "label": "run_migrations_offline",
+        "kind": 2,
+        "importPath": "migrations.env",
+        "description": "migrations.env",
+        "peekOfCode": "def run_migrations_offline() -> None:\n    \"\"\"Run migrations in 'offline' mode.\n    This configures the context with just a URL\n    and not an Engine, though an Engine is acceptable\n    here as well.  By skipping the Engine creation\n    we don't even need a DBAPI to be available.\n    Calls to context.execute() here emit the given string to the\n    script output.\n    \"\"\"\n    url = config.get_main_option(\"sqlalchemy.url\")",
+        "detail": "migrations.env",
+        "documentation": {}
+    },
+    {
+        "label": "run_migrations_online",
+        "kind": 2,
+        "importPath": "migrations.env",
+        "description": "migrations.env",
+        "peekOfCode": "def run_migrations_online() -> None:\n    \"\"\"Run migrations in 'online' mode.\n    In this scenario we need to create an Engine\n    and associate a connection with the context.\n    \"\"\"\n    connectable = engine_from_config(\n        config.get_section(config.config_ini_section, {}),\n        prefix=\"sqlalchemy.\",\n        poolclass=pool.NullPool,\n    )",
+        "detail": "migrations.env",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "migrations.env",
+        "description": "migrations.env",
+        "peekOfCode": "config = context.config\n# Interpret the config file for Python logging.\n# This line sets up loggers basically.\nif config.config_file_name is not None:\n    fileConfig(config.config_file_name)\n# add your model's MetaData object here\n# for 'autogenerate' support\n# from myapp import mymodel\n# target_metadata = mymodel.Base.metadata\ntarget_metadata = Base.metadata",
+        "detail": "migrations.env",
+        "documentation": {}
+    },
+    {
+        "label": "target_metadata",
+        "kind": 5,
+        "importPath": "migrations.env",
+        "description": "migrations.env",
+        "peekOfCode": "target_metadata = Base.metadata\nconfig.set_main_option(\"sqlalchemy.url\", SQLALCHEMY_DATABASE_URL)\ndef run_migrations_offline() -> None:\n    \"\"\"Run migrations in 'offline' mode.\n    This configures the context with just a URL\n    and not an Engine, though an Engine is acceptable\n    here as well.  By skipping the Engine creation\n    we don't even need a DBAPI to be available.\n    Calls to context.execute() here emit the given string to the\n    script output.",
+        "detail": "migrations.env",
+        "documentation": {}
+    },
+    {
+        "label": "Settings",
+        "kind": 6,
+        "importPath": "src.conf.config",
+        "description": "src.conf.config",
+        "peekOfCode": "class Settings(BaseSettings):\n    sqlalchemy_database_url: str = 'postgresql+psycopg2://user:password@localhost:5432/postgres'\n    # secret_key: str = 'secret_key'\n    # algorithm: str = 'HS256'\n    # mail_username: str = \"example@meta.ua\"\n    # mail_password: str = \"secretPassword\"\n    # mail_from: str = \"example@meta.ua\"\n    # mail_port: int = 465\n    # mail_server: str = \"smtp.meta.ua\"\n    # redis_host: str = \"localhost\"",
+        "detail": "src.conf.config",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "kind": 5,
+        "importPath": "src.conf.config",
+        "description": "src.conf.config",
+        "peekOfCode": "settings = Settings()",
+        "detail": "src.conf.config",
+        "documentation": {}
+    },
+    {
+        "label": "NOT_FOUND",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "NOT_FOUND = 'Not Found'\nALREADY_EXISTS = \"Account already exists\"\nDOESNT_EXISTS = \"Account doesn't exists\"\nSUCCESS_CREATE_USER = \"User successfully created. Check your email for confirmation.\"\nINVALID_PASSWORD = \"Invalid password\"\nINVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "ALREADY_EXISTS",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "ALREADY_EXISTS = \"Account already exists\"\nDOESNT_EXISTS = \"Account doesn't exists\"\nSUCCESS_CREATE_USER = \"User successfully created. Check your email for confirmation.\"\nINVALID_PASSWORD = \"Invalid password\"\nINVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "DOESNT_EXISTS",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "DOESNT_EXISTS = \"Account doesn't exists\"\nSUCCESS_CREATE_USER = \"User successfully created. Check your email for confirmation.\"\nINVALID_PASSWORD = \"Invalid password\"\nINVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "SUCCESS_CREATE_USER",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "SUCCESS_CREATE_USER = \"User successfully created. Check your email for confirmation.\"\nINVALID_PASSWORD = \"Invalid password\"\nINVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "INVALID_PASSWORD",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "INVALID_PASSWORD = \"Invalid password\"\nINVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "INVALID_TOKEN",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "INVALID_TOKEN = \"Invalid refresh token\"\nVERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "VERIFICATION_ERROR",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "VERIFICATION_ERROR = \"Verification error\"\nINVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "INVALID_EMAIL",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "INVALID_EMAIL = \"Invalid email\"\nEMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_NOT_CONFIRMED",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "EMAIL_NOT_CONFIRMED = \"Email not confirmed\"\nEMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_ALREADY_CONFIRMED",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "EMAIL_ALREADY_CONFIRMED = \"Your email is already confirmed\"\nEMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_CONFIRMED",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "EMAIL_CONFIRMED = \"Email confirmed\"\nEMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HAS_BEEN_SEND",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "EMAIL_HAS_BEEN_SEND = \"Email has been send\"\nCHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "CHECK_YOUR_EMAIL",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "CHECK_YOUR_EMAIL = \"Check your email for confirmation.\"\nFAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "FAIL_EMAIL_VERIFICATION",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "FAIL_EMAIL_VERIFICATION = \"Invalid token for email verification\"\nINVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "INVALID_SCOPE",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "INVALID_SCOPE = 'Invalid scope for token'\nNOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "NOT_VALIDATE_CREDENTIALS",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "NOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'\nDB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "DB_CONFIG_ERROR",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "DB_CONFIG_ERROR = \"Database is not configured correctly\"\nDB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "DB_CONNECT_ERROR",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "DB_CONNECT_ERROR = \"Error connecting to the database\"\nWELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "WELCOME_MESSAGE",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "WELCOME_MESSAGE = \"Welcome to FastAPI!\"\nTOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "TOO_MANY_REQUESTS",
+        "kind": 5,
+        "importPath": "src.conf.messages",
+        "description": "src.conf.messages",
+        "peekOfCode": "TOO_MANY_REQUESTS = 'No more than 10 requests per minute'",
+        "detail": "src.conf.messages",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "peekOfCode": "def get_db():\n    \"\"\"\n    The get_db function opens a new database connection if there is none yet for the current application context.\n    It will also create the database tables if they don't exist yet.\n    :return: A database session object\n    \"\"\"\n    db = SessionLocal()\n    try:\n        yield db\n    finally:",
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "SQLALCHEMY_DATABASE_URL",
+        "kind": 5,
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "peekOfCode": "SQLALCHEMY_DATABASE_URL = settings.sqlalchemy_database_url\nengine = create_engine(SQLALCHEMY_DATABASE_URL)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\n# Dependency\ndef get_db():\n    \"\"\"\n    The get_db function opens a new database connection if there is none yet for the current application context.\n    It will also create the database tables if they don't exist yet.\n    :return: A database session object\n    \"\"\"",
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "engine",
+        "kind": 5,
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "peekOfCode": "engine = create_engine(SQLALCHEMY_DATABASE_URL)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\n# Dependency\ndef get_db():\n    \"\"\"\n    The get_db function opens a new database connection if there is none yet for the current application context.\n    It will also create the database tables if they don't exist yet.\n    :return: A database session object\n    \"\"\"\n    db = SessionLocal()",
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "SessionLocal",
+        "kind": 5,
+        "importPath": "src.database.connect_db",
+        "description": "src.database.connect_db",
+        "peekOfCode": "SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\n# Dependency\ndef get_db():\n    \"\"\"\n    The get_db function opens a new database connection if there is none yet for the current application context.\n    It will also create the database tables if they don't exist yet.\n    :return: A database session object\n    \"\"\"\n    db = SessionLocal()\n    try:",
+        "detail": "src.database.connect_db",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "kind": 6,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "class User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now())\n    role = Column(String(20), nullable=False)\n    refresh_token = Column(String(255), nullable=True)",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "Post",
+        "kind": 6,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "class Post(Base):\n    __tablename__ = \"posts\"\n    id = Column(Integer, primary_key=True)\n    image_url = Column(String(200))\n    title = Column(String(50))\n    descr = Column(Text)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "Hashtag",
+        "kind": 6,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "class Hashtag(Base):\n    __tablename__ = 'hashtags'\n    id = Column(Integer, primary_key=True)\n    title = Column(String(25), nullable=False, unique=True)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"hashtags\")\nclass Comment(Base):\n    __tablename__ = 'comments'\n    id = Column(Integer, primary_key=True)\n    created_at = Column(DateTime, default=func.now)",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "Comment",
+        "kind": 6,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "class Comment(Base):\n    __tablename__ = 'comments'\n    id = Column(Integer, primary_key=True)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"posts\")\n    post = relationship('Post', backref=\"comments\")\nclass Rating(Base):",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "Rating",
+        "kind": 6,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "class Rating(Base):\n    __tablename__ = 'ratings'\n    id = Column(Integer, primary_key=True)\n    rate = Column(Integer, nullable=False)\n    created_at = Column(DateTime, default=func.now)\n    updated_at = Column(DateTime, default=func.now)\n    post_id = Column('post_id', ForeignKey('posts.id', ondelete='CASCADE'), nullable=False)\n    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)\n    user = relationship('User', backref=\"ratings\")\n    post = relationship('Post', backref=\"rating\")",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "Base",
+        "kind": 5,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "Base = declarative_base()\nclass User(Base):\n    __tablename__ = \"users\"\n    id = Column(Integer, primary_key=True)\n    username = Column(String(50))\n    email = Column(String(250), nullable=False, unique=True)\n    password = Column(String(255), nullable=False)\n    avatar = Column(String(255), nullable=True)\n    created_at = Column('created_at', DateTime, default=func.now())\n    role = Column(String(20), nullable=False)",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "post_m2m_hashtag",
+        "kind": 5,
+        "importPath": "src.database.models",
+        "description": "src.database.models",
+        "peekOfCode": "post_m2m_hashtag = Table(\n    \"post_m2m_hashtag\",\n    Base.metadata,\n    Column(\"id\", Integer, primary_key=True),\n    Column(\"post_id\", ForeignKey(\"posts.id\", ondelete=\"CASCADE\"), primary_key=True),\n    Column(\"hashtag_id\", ForeignKey(\"hashtags.id\", ondelete=\"CASCADE\"), primary_key=True),\n)\nclass Post(Base):\n    __tablename__ = \"posts\"\n    id = Column(Integer, primary_key=True)",
+        "detail": "src.database.models",
+        "documentation": {}
+    },
+    {
+        "label": "read_root",
+        "kind": 2,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello PhotoShare\"}\n@app.get(\"/api/healthchecker\")\ndef healthchecker(db: Session = Depends(get_db)):\n    try:\n        # Make request\n        result = db.execute(text(\"SELECT 1\")).fetchone()\n        if result is None:\n            raise HTTPException(status_code=500, detail=\"Database is not configured correctly\")\n        return {\"message\": \"Welcome to FastAPI!\"}",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "healthchecker",
+        "kind": 2,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "def healthchecker(db: Session = Depends(get_db)):\n    try:\n        # Make request\n        result = db.execute(text(\"SELECT 1\")).fetchone()\n        if result is None:\n            raise HTTPException(status_code=500, detail=\"Database is not configured correctly\")\n        return {\"message\": \"Welcome to FastAPI!\"}\n    except Exception as e:\n        print(e)\n        raise HTTPException(status_code=500, detail=\"Error connecting to the database\")",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "app = FastAPI()\n# app.include_router(tags.router, prefix='/api')\n# app.include_router(notes.router, prefix='/api')\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello PhotoShare\"}\n@app.get(\"/api/healthchecker\")\ndef healthchecker(db: Session = Depends(get_db)):\n    try:\n        # Make request",
+        "detail": "src.main",
+        "documentation": {}
+    }
+]
