@@ -108,7 +108,7 @@ class PostBase(BaseModel):
     title: str
     descr: str = Field(max_length=450)
     rating: float = None
-    
+    done: Optional[bool] = None
     
 class PostModel(PostBase):
     hashtags: List[int]

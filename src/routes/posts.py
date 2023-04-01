@@ -24,7 +24,7 @@ async def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_
 @router.get("/by_id{post_id}", response_model=PostResponse)
 async def read_post(post_id: int, db: Session = Depends(get_db),
                     current_user: User = Depends(auth_service.get_current_user)):
-    post = await repository_posts.get_posts(post_id, current_user, db)
+    post = await repository_posts.get_post(post_id, current_user, db)
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
     return post
