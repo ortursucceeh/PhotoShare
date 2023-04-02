@@ -39,7 +39,7 @@ async def get_hashtags(post_id: int, user: User, db: Session) -> Hashtag: #
     return db.query(Hashtag).filter(and_(Hashtag.post == post_id, Hashtag.user_id == user.id)).all()
 
 
-async def get_rating(post_id: int, user: User, db: Session) -> List[Rating]:
+async def get_rating(post_id: int, user: User, db: Session) -> Rating:
     return db.query(Rating).filter(and_(Rating.post == post_id, Rating.user_id == user.id)).first()
 
 
