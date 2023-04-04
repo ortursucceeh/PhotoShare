@@ -21,7 +21,7 @@ class User(Base):
     email = Column(String(250), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     avatar = Column(String(255), nullable=True)
-    created_at = Column('created_at', DateTime, default=func.now())
+    created_at = Column('created_at', DateTime, default=func.now)
     role = Column('role', Enum(UserRoleEnum), default="user")
     refresh_token = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True)
