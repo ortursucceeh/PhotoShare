@@ -57,27 +57,27 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('post_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
+    sa.Column('rating_post_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['rating_post_id'], ['posts.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('post_m2m_hashtag',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('rating_post_id', sa.Integer(), nullable=False),
     sa.Column('hashtag_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['hashtag_id'], ['hashtags.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'post_id', 'hashtag_id')
+    sa.ForeignKeyConstraint(['rating_post_id'], ['posts.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', 'rating_post_id', 'hashtag_id')
     )
     op.create_table('ratings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('rate', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('rating_post_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['rating_post_id'], ['posts.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
