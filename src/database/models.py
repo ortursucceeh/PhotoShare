@@ -1,3 +1,5 @@
+import enum
+
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Table, Text, func
 # from sqlalchemy.sql.sqltypes import Date
 from sqlalchemy.orm import declarative_base
@@ -8,7 +10,7 @@ from sqlalchemy import Enum
 Base = declarative_base()
 
 
-class UserRoleEnum(str, Enum):
+class UserRoleEnum(enum.Enum):
     user = 'User'
     moder = 'Moderator'
     admin = 'Administrator'
@@ -21,8 +23,8 @@ class User(Base):
     email = Column(String(250), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     avatar = Column(String(255), nullable=True)
-    created_at = Column('created_at', DateTime, default=func.now)
-    role = Column('role', Enum(UserRoleEnum), default="user")
+    created_at = Column('created_at', DateTime, default=func.now())
+    role = Column('role', Enum(UserRoleEnum), default="User")
     refresh_token = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True)
     is_verify = Column(Boolean, default=False)
