@@ -6,10 +6,10 @@ from enum import Enum
 
 
 class Role(str, Enum):
-    admin = 'Administrator'
-    moder = 'Moderator'
     user = 'User'
-    
+    moder = 'Moderator'
+    admin = 'Administrator'
+
 
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
@@ -17,6 +17,7 @@ class UserModel(BaseModel):
     password: str = Field(min_length=6, max_length=25)
     role: Role
     avatar: Optional[str]
+
 
 class UserDb(BaseModel):
     id: int
@@ -126,3 +127,7 @@ class PostResponse(PostBase):
 
     class Config:
         orm_mode = True
+
+
+class RequestEmail(BaseModel):
+    email: EmailStr
