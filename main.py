@@ -7,6 +7,7 @@ from src.database.connect_db import get_db
 from src.routes.auth import router as auth_router
 from src.routes.posts import router as post_router
 from src.routes.transform_post import router as trans_router
+
 app = FastAPI()
 
 
