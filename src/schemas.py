@@ -4,26 +4,22 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 from enum import Enum
 
-
-class Role(str, Enum):
-    user = 'User'
-    moder = 'Moderator'
-    admin = 'Administrator'
+from src.database.models import UserRoleEnum
 
 
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
     email: EmailStr
     password: str = Field(min_length=6, max_length=25)
-    role: Role
+    role: UserRoleEnum
     avatar: Optional[str]
 
 
 class UserDb(BaseModel):
     id: int
-    username: EmailStr
+    username: str = Field(min_length=5, max_length=25)
     email: str
-    role: Role
+    role: UserRoleEnum
     avatar: Optional[str]
     created_at: datetime
 
