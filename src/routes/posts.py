@@ -25,10 +25,6 @@ router = APIRouter(prefix='/posts', tags=["posts"])
 
 # в кожному маршруті добавляємо dependencies=[Depends(allowed_get_posts)] передаємо список тих кому дозволено
 
-# @router.get("/", response_model=List[ResponseOwner], dependencies=[Depends(allowed_get_posts)])
-# async def get_owners(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
-#     owners = await repository_owners.get_owners(db)
-#     return owners
 
 @router.get("/all", response_model=List[PostResponse])
 async def read_all_user_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
@@ -54,17 +50,18 @@ async def read_posts_with_title(post_title: str, db: Session = Depends(get_db),
     return posts
 
 
-@router.get("/by_user_id/{user_id}", response_model=PostResponse)
+@router.get("/by_user_id/{user_id}", response_model=List[PostResponse])
 async def read_post(user_id: int, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
-    posts = await repository_posts.get_posts_by_user_id(user_id, current_user, db)
+    posts = await repository_posts.get_posts_by_user_id(user_id, db)
     if not posts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts
 
-
-@router.get("/by_username/{user_name}", response_model=PostResponse)
-async def read_post(user_name: int, db: Session = Depends(get_db)):
+#fix
+@router.get("/by_username/{user_name}", response_model=List[PostResponse])
+async def read_post(user_name: str, db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
     posts = await repository_posts.get_posts_by_username(user_name, db)
     if not posts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
@@ -107,11 +104,6 @@ async def remove_post(post_id: int, db: Session = Depends(get_db),
 #     if not posts:
 #         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
 #     return posts
-
-
-
-
-
 
 
 # @router.get("/comments/all/{post_id}", response_model=PostResponse)

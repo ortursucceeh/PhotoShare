@@ -67,12 +67,12 @@ async def get_posts_by_title(post_title: str, user: User, db: Session) -> List[P
 
 
 
-async def get_posts_by_user_id(user_id: int, user: User, db: Session) -> Post:
-    return db.query(Post).filter(and_(Post.user_id == user.id, Post.user_id == user_id)).all()
+async def get_posts_by_user_id(user_id: int, db: Session) -> List[Post]:
+    return db.query(Post).filter(Post.user_id == user_id).all()
 
 
-async def get_posts_by_username(user_name: str, user: User, db: Session) -> Post: #
-    return db.query(Post).filter(and_(Post.user_id == user.id, func.lower(user.username).like(f'%{user_name.lower()}%'))).all()
+async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: #
+    return db.query(Post).filter(func.lower(Post.user.username).like(f'%{user_name.lower()}%')).all()
 # ----------------------------------------------------------------
 
 
