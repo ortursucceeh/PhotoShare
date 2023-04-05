@@ -10,24 +10,24 @@ from sqlalchemy import Enum
 Base = declarative_base()
 
 
-# class UserRoleEnum(enum.Enum):
-#     user = 'User'
-#     moder = 'Moderator'
-#     admin = 'Administrator'
+class UserRoleEnum(enum.Enum):
+    user = 'User'
+    moder = 'Moderator'
+    admin = 'Administrator'
 
 
-# class User(Base):
-#     __tablename__ = "users"
-#     id = Column(Integer, primary_key=True)
-#     username = Column(String(50))
-#     email = Column(String(250), nullable=False, unique=True)
-#     password = Column(String(255), nullable=False)
-#     avatar = Column(String(255), nullable=True)
-#     created_at = Column('created_at', DateTime, default=func.now())
-#     role = Column('role', Enum(UserRoleEnum), default="User")
-#     refresh_token = Column(String(255), nullable=True)
-#     is_active = Column(Boolean, default=True)
-#     is_verify = Column(Boolean, default=False)
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    username = Column(String(50))
+    email = Column(String(250), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
+    avatar = Column(String(355), nullable=True)
+    created_at = Column('created_at', DateTime, default=func.now())
+    role = Column('role', Enum(UserRoleEnum), default=UserRoleEnum.user)
+    refresh_token = Column(String(255), nullable=True)
+    is_active = Column(Boolean, default=True)
+    is_verify = Column(Boolean, default=False)
 
 
 post_m2m_hashtag = Table(
@@ -48,7 +48,7 @@ class Post(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
     done = Column(Boolean, default=False)  # for update
-    # user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
 
     # @aggregated('rating', Column(Numeric))
@@ -65,7 +65,7 @@ class Post(Base):
     #     return func.avg('ratings.rate')
 
     # rating = relationship('Rating', backref="post_id")
-    # user = relationship('User', backref="posts")
+    user = relationship('User', backref="posts")
 
 
 class Hashtag(Base):
@@ -73,9 +73,8 @@ class Hashtag(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(25), nullable=False, unique=True)
     created_at = Column(DateTime, default=func.now())
-    done = Column(Boolean, default=False)  # for update
-#     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
-#     user = relationship('User', backref="hashtags")
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
+    user = relationship('User', backref="hashtags")
 
 
 # class Comment(Base):

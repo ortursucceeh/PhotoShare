@@ -4,13 +4,9 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 from src.database.connect_db import get_db
-# from src.routes import auth
+from src.routes.auth import router as auth_router
 from src.routes.posts import router as post_router
 app = FastAPI()
-
-
-# app.include_router(tags.router, prefix='/api')
-# app.include_router(notes.router, prefix='/api')
 
 
 @app.get("/")
@@ -31,7 +27,7 @@ def healthchecker(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Error connecting to the database")
 
 
-# app.include_router(auth.router, prefix='/api')
+app.include_router(auth_router, prefix='/api')
 app.include_router(post_router, prefix='/api')
 
 if __name__ == '__main__':

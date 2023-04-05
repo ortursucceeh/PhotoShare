@@ -4,38 +4,37 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 from enum import Enum
 
-# from src.database.models import UserRoleEnum
+from src.database.models import UserRoleEnum
 
 
-# class UserModel(BaseModel):
-#     username: str = Field(min_length=5, max_length=25)
-#     email: EmailStr
-#     password: str = Field(min_length=6, max_length=25)
-#     role: UserRoleEnum
-#     avatar: Optional[str]
+class UserModel(BaseModel):
+    username: str = Field(min_length=5, max_length=25)
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=25)
+    avatar: Optional[str]
 
 
-# class UserDb(BaseModel):
-#     id: int
-#     username: str = Field(min_length=5, max_length=25)
-#     email: str
-#     role: UserRoleEnum
-#     avatar: Optional[str]
-#     created_at: datetime
+class UserDb(BaseModel):
+    id: int
+    username: str = Field(min_length=5, max_length=25)
+    email: str
+    avatar: Optional[str]
+    role: UserRoleEnum
+    created_at: datetime
 
-#     class Config:
-#         orm_mode = True
-
-
-# class UserResponse(BaseModel):
-#     user: UserDb
-#     detail: str = "User successfully created"
+    class Config:
+        orm_mode = True
 
 
-# class TokenModel(BaseModel):
-#     access_token: str
-#     refresh_token: str
-#     token_type: str = "bearer"
+class UserResponse(BaseModel):
+    user: UserDb
+    detail: str = "User successfully created"
+
+
+class TokenModel(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
 
 
 # Hashtag
@@ -114,14 +113,13 @@ class PostModel(PostBase):
 
 class PostUpdate(PostModel):
     done: bool 
-    
+    updated_at: datetime
     
 class PostResponse(PostBase):
     id: int
     hashtags: List[HashtagResponse] = []
     created_at: datetime
     updated_at: datetime
-    done: bool 
     
     class Config:
         orm_mode = True
