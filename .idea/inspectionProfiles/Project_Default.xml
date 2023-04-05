@@ -1,0 +1,19 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="HW10.Django_book.samplesite.samplesite.urls.bboard" />
+          <option value="HW10.Final.Final_1.quotes_project.quotes_project.urls.quotes" />
+          <option value="HW11.Less2.src.routes.owners.src" />
+          <option value="HW12.Less1.simple.auth.User" />
+          <option value="Less1.simple.auth.User" />
+          <option value="simple.auth.User" />
+          <option value="src.routes.hashtags.router" />
+          <option value="src.main.posts" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

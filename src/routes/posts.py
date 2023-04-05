@@ -29,7 +29,7 @@ router = APIRouter(prefix='/posts', tags=["posts"])
 @router.get("/all", response_model=List[PostResponse])
 async def read_all_user_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
-    posts = await repository_posts.get_posts(skip, limit, current_user, db)
+    posts = await repository_posts.get_user_posts(skip, limit, current_user, db)
     return posts
 
 

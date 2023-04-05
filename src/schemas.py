@@ -1,7 +1,7 @@
 from datetime import datetime
 import sqlalchemy
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, validator
 from enum import Enum
 
 from src.database.models import UserRoleEnum
@@ -39,16 +39,15 @@ class TokenModel(BaseModel):
 
 # Hashtag
 class HashtagBase(BaseModel):
-    title: str = Field(max_length=500)
+    title: str = Field(max_length=50)
     
     
 class HashtagModel(HashtagBase):
     pass
     
 
-class HashtagResponse(HashtagModel):
+class HashtagResponse(HashtagBase):
     id: int
-    title: str
     created_at: datetime
     
     class Config:
@@ -104,11 +103,16 @@ class PostBase(BaseModel):
     image_url: str = Field(max_length=300)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
+    hashtags: Optional[List[HashtagBase]] = None
     # rating: float = None
-    
+    @validator("hashtags")
+    def validate_tags(cls, v):
+        if len(v or []) > 5:
+            raise ValueError("Too many hashtags. Maximum 5 tags allowed.")
+        return v
     
 class PostModel(PostBase):
-    hashtags: List[int] = []
+    hashtags: List[str]
 
 
 class PostUpdate(PostModel):
