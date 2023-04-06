@@ -43,6 +43,7 @@ class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True)
     image_url = Column(String(200))
+    transform_url = Column(String(200))
     title = Column(String(50))
     descr = Column(Text)
     created_at = Column(DateTime, default=func.now())

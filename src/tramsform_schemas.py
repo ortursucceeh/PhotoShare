@@ -15,9 +15,7 @@ class TransformEffectModel(BaseModel):
 
 class TransformResizeModel(BaseModel):
     crop: bool = False
-    scale: bool = False
     fill: bool = False
-    pad: bool = False
     height: int = Field(ge=0, default=400)
     width: int = Field(ge=0, default=400)
 

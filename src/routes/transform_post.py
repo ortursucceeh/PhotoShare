@@ -22,6 +22,7 @@ async def transform_metod_circle(post_id: int, body: TransformCircleModel, db: S
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
 
+
 @router.patch("/effect/{post_id}", response_model=PostResponse, status_code=status.HTTP_200_OK)
 async def transform_metod_effect(post_id: int, body: TransformEffectModel, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
@@ -29,6 +30,7 @@ async def transform_metod_effect(post_id: int, body: TransformEffectModel, db: S
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
+
 
 @router.patch("/resize/{post_id}", response_model=PostResponse, status_code=status.HTTP_200_OK)
 async def transform_metod_resize(post_id: int, body: TransformResizeModel, db: Session = Depends(get_db),
@@ -38,6 +40,7 @@ async def transform_metod_resize(post_id: int, body: TransformResizeModel, db: S
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
 
+
 @router.patch("/text/{post_id}", response_model=PostResponse, status_code=status.HTTP_200_OK)
 async def transform_metod_text(post_id: int, body: TransformTextModel, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
@@ -45,6 +48,7 @@ async def transform_metod_text(post_id: int, body: TransformTextModel, db: Sessi
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
+
 
 @router.post("/qr/{post_id}", status_code=status.HTTP_200_OK)
 async def show_qr(post_id: int, db: Session = Depends(get_db),
