@@ -18,3 +18,4 @@ DB_CONFIG_ERROR = "Database is not configured correctly"
 DB_CONNECT_ERROR = "Error connecting to the database"
 WELCOME_MESSAGE = "Welcome to FastAPI!"
 TOO_MANY_REQUESTS = 'No more than 10 requests per minute'
+INVALID_URL = "Invalid url"
