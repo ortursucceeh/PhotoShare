@@ -1,11 +1,13 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
-
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
+
 from src.database.connect_db import get_db
 from src.routes.auth import router as auth_router
 from src.routes.posts import router as post_router
+from src.routes.comments import router as comment_router
+from src.routes.ratings import router as rating_router
 from src.routes.transform_post import router as trans_router
 from src.routes.hashtags import router as hashtag_router
 
@@ -32,6 +34,8 @@ def healthchecker(db: Session = Depends(get_db)):
 
 app.include_router(auth_router, prefix='/api')
 app.include_router(post_router, prefix='/api')
+app.include_router(comment_router, prefix='/api')
+app.include_router(rating_router, prefix='/api')
 app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
 

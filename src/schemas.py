@@ -40,62 +40,56 @@ class TokenModel(BaseModel):
 # Hashtag
 class HashtagBase(BaseModel):
     title: str = Field(max_length=50)
-    
-    
+
+
 class HashtagModel(HashtagBase):
     pass
-    
+
 
 class HashtagResponse(HashtagBase):
     id: int
     created_at: datetime
-    
+
     class Config:
         orm_mode = True
-        
-        
-# Comment
-# class CommentBase(BaseModel):
-#     text: str = Field(max_length=500)
-    
-    
-# class CommentModel(CommentBase):
-#     pass
-    
-    
-# class CommentUpdate(CommentModel):
-#     done = bool
-    
-    
-# class CommentResponse(CommentModel):
-#     id: int
-#     created_at: datetime
-#     updated_at = datetime
-    
-#     class Config:
-#         orm_mode = True
-        
 
-# # Rating
-# class RatingBase(BaseModel):
-#     rate: float
-    
-    
-# class RatingModel(RatingBase):
-#     pass
-    
-    
-# class RatingUpdate(RatingModel):
-#     done = bool
-    
-    
-# class RatingResponse(RatingModel):
-#     id: int
-#     created_at: datetime
-#     updated_at = datetime
-    
-#     class Config:
-#         orm_mode = True
+
+# Comments
+class CommentBase(BaseModel):
+    text: str = Field(max_length=500)
+
+
+class CommentModel(CommentBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime]
+    user_id: int
+    post_id: int
+    update_status: bool
+
+    class Config:
+        orm_mode = True
+
+
+class CommentUpdate(CommentModel):
+    update_status: bool = True
+    updated_at = datetime
+
+    class Config:
+        orm_mode = True
+
+
+# Rating
+class RatingBase(BaseModel):
+    rate: int
+
+
+class RatingModel(RatingBase):
+    id: int
+    rate: int
+    created_at: datetime
+    post_id: int
+    user_id: int
 
 
 # Post
@@ -104,30 +98,32 @@ class PostBase(BaseModel):
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
+
     # rating: float = None
     @validator("hashtags")
     def validate_tags(cls, v):
         if len(v or []) > 5:
             raise ValueError("Too many hashtags. Maximum 5 tags allowed.")
         return v
-    
+
+
 class PostModel(PostBase):
     hashtags: List[str]
 
 
 class PostUpdate(PostModel):
-    done: bool 
+    done: bool
     updated_at: datetime
-    
+
+
 class PostResponse(PostBase):
     id: int
     hashtags: List[HashtagResponse] = []
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         orm_mode = True
-
 
 # class RequestEmail(BaseModel):
 #     email: EmailStr
