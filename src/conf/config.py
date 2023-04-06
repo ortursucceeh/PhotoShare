@@ -13,13 +13,9 @@ qr = qrcode.QRCode(
 
 def init_cloudinary():
     cloudinary.config(
-        # cloud_name = settings.cloudinary_name,
-        # api_key = settings.cloudinary_api_key,
-        # api_secret = settings.cloudinary_api_secret,
-        # secure = True
-        cloud_name = "dybgf2pue",
-        api_key = "461755645915968",
-        api_secret = "rKEKisaiWSO6Bxe8RBHP-9dBE7I",
+        cloud_name = settings.cloudinary_name,
+        api_key = settings.cloudinary_api_key,
+        api_secret = settings.cloudinary_api_secret,
         secure = True
     )
 
@@ -37,7 +33,7 @@ class Settings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
     cloudinary_name: str = 'name'
-    cloudinary_api_key: int = 5555555555555555
+    cloudinary_api_key: str = '5555555555555555'
     cloudinary_api_secret: str = 'secret'
 
     class Config:

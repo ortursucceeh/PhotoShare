@@ -1,14 +1,16 @@
-import enum
+import pyqrcode
+import io
+import base64
+from starlette.responses import StreamingResponse
 
-class BugStatus(enum.Enum):
+url = "/home/vasya/Завантаження/Telegram Desktop/bilka.jpg"
 
-    new = 7
-    incomplete = 6
-    invalid = 5
-    wont_fix = 4
-    in_progress = 3
-    fix_committed = 2
-    fix_released = 1
+url_input = "https://res.cloudinary.com/dybgf2pue/image/upload/c_thumb,g_face,h_400,w_400/r_max/4"
 
-print('\nMember name: {}'.format(BugStatus.wont_fix.name)) 
-print('Member value: {}'.format(BugStatus.wont_fix.value))
+def gg(url_input):
+    img = pyqrcode.create(url_input)
+    s = io.BytesIO()
+    img.png(s,scale=6)
+    encoded = base64.b64encode(s.getvalue()).decode("ascii")
+    return StreamingResponse(encoded, media_type="image/jpeg")
+print(gg(url_input))

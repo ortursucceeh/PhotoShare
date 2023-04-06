@@ -1,5 +1,7 @@
 import io
+import base64
 import cloudinary
+import pyqrcode
 
 from cloudinary.uploader import upload
 from starlette.responses import StreamingResponse
@@ -14,14 +16,11 @@ from src.database.models import Post, User
 async def transform_metod_circle(post_id: int, body: TransformCircleModel, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
+        init_cloudinary()
         upload(post.image_url, public_id=str(post.id))
-        transformation = []
         if body.height and body.width:
-            transformation.append(
-            {'gravity': "face", 'height': f"{body.height}", 'width': f"{body.width}", 'crop': "thumb"},
-            {'radius': "max"}
-            )
-            init_cloudinary()
+            transformation = [{'gravity': "face", 'height': f"{body.height}", 'width': f"{body.width}", 'crop': "thumb"},
+            {'radius': "max"}]
             url = cloudinary.CloudinaryImage(str(post.id)).build_url(
                 transformation=transformation
             )
@@ -34,6 +33,7 @@ async def transform_metod_circle(post_id: int, body: TransformCircleModel, user:
 async def transform_metod_effect(post_id: int, body: TransformEffectModel, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
+        init_cloudinary()
         upload(post.image_url, public_id=str(post.id))
         transformation = []
         effect = ""
@@ -47,7 +47,6 @@ async def transform_metod_effect(post_id: int, body: TransformEffectModel, user:
             effect = "cartoonify"
         if effect:
             transformation.append({"effect": f"{effect}"})
-            init_cloudinary()
             url = cloudinary.CloudinaryImage(str(post.id)).build_url(
                 transformation=transformation
             )
@@ -60,6 +59,7 @@ async def transform_metod_effect(post_id: int, body: TransformEffectModel, user:
 async def transform_metod_resize(post_id: int, body: TransformResizeModel, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
+        init_cloudinary()
         upload(post.image_url, public_id=str(post.id))
         transformation = []
         crop = ""
@@ -75,7 +75,6 @@ async def transform_metod_resize(post_id: int, body: TransformResizeModel, user:
             transformation.append(
             {"gravity": "auto", 'height': f"{body.height}", 'width': f"{body.width}", 'crop': f"{crop}"}
             )
-            init_cloudinary()
             url = cloudinary.CloudinaryImage(str(post.id)).build_url(
                 transformation=transformation
             )
@@ -88,13 +87,10 @@ async def transform_metod_resize(post_id: int, body: TransformResizeModel, user:
 async def transform_metod_text(post_id: int, body: TransformTextModel, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
+        init_cloudinary()
         upload(post.image_url, public_id=str(post.id))
-        transformation = []
         if body.text:
-            transformation.append(
-            {'color': "#FFFF00", 'overlay': {'font_family': "Times", 'font_size': f"{body.font_size}", 'font_weight': "bold", 'text': f"{body.text}"}}, {'flags': "layer_apply", 'gravity': "south", 'y': 20}
-            )
-            init_cloudinary()
+            transformation = [{'color': "#FFFF00", 'overlay': {'font_family': "Times", 'font_size': f"{body.font_size}", 'font_weight': "bold", 'text': f"{body.text}"}}, {'flags': "layer_apply", 'gravity': "south", 'y': 20}]
             url = cloudinary.CloudinaryImage(str(post.id)).build_url(
                 transformation=transformation
             )
@@ -107,11 +103,10 @@ async def transform_metod_text(post_id: int, body: TransformTextModel, user: Use
 async def show_qr(post_id: int, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
-        if post.image_url:
-            img = qr.make(post.image_url)
-            buf = io.BytesIO()
-            img.save(buf)
-            buf.seek(0)
-            return StreamingResponse(buf, media_type="image/jpeg")    
-
-    return post
+        if post.image_url:   
+            img = pyqrcode.create(post.image_url)
+            buffered = io.BytesIO()
+            img.png(buffered,scale=6)
+            encoded_img = base64.b64encode(buffered.getvalue()).decode("ascii")
+    
+        return encoded_img
