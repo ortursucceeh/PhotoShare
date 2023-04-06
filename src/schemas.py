@@ -1,7 +1,7 @@
 from datetime import datetime
 import sqlalchemy
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, HttpUrl, Field, validator
 from enum import Enum
 
 from src.database.models import UserRoleEnum
@@ -95,6 +95,7 @@ class RatingModel(RatingBase):
 # Post
 class PostBase(BaseModel):
     image_url: str = Field(max_length=300)
+    transform_url: HttpUrl
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
