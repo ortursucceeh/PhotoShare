@@ -1,4 +1,27 @@
+import cloudinary
+import qrcode
 from pydantic import BaseSettings
+
+
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+)
+
+
+def init_cloudinary():
+    cloudinary.config(
+        # cloud_name = settings.cloudinary_name,
+        # api_key = settings.cloudinary_api_key,
+        # api_secret = settings.cloudinary_api_secret,
+        # secure = True
+        cloud_name = "dybgf2pue",
+        api_key = "461755645915968",
+        api_secret = "rKEKisaiWSO6Bxe8RBHP-9dBE7I",
+        secure = True
+    )
 
 
 class Settings(BaseSettings):
