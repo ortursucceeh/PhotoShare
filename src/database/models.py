@@ -33,10 +33,12 @@ class User(Base):
 post_m2m_hashtag = Table(
     "post_m2m_hashtag",
     Base.metadata,
-    Column("id", Integer, primary_key=True),
-    Column("post_id", ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True),
-    Column("hashtag_id", ForeignKey("hashtags.id", ondelete="CASCADE"), primary_key=True),
+    Column("id", Integer, primary_key=True, autoincrement=True, default=1),
+    Column("post_id", Integer, ForeignKey("posts.id", ondelete="CASCADE")),
+    Column("hashtag_id", Integer, ForeignKey("hashtags.id", ondelete="CASCADE")),
 )
+
+
 
 
 class Post(Base):
@@ -44,7 +46,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True)
     image_url = Column(String(200))
     title = Column(String(50))
-    descr = Column(Text)
+    descr = Column(String(150), nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
     done = Column(Boolean, default=False)  # for update

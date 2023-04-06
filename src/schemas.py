@@ -39,7 +39,7 @@ class TokenModel(BaseModel):
 
 # Hashtag
 class HashtagBase(BaseModel):
-    title: str = Field(max_length=50)
+    title: str = Field(max_length=25)
     
     
 class HashtagModel(HashtagBase):
@@ -105,12 +105,14 @@ class PostBase(BaseModel):
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
     # rating: float = None
+
     @validator("hashtags")
     def validate_tags(cls, v):
         if len(v or []) > 5:
             raise ValueError("Too many hashtags. Maximum 5 tags allowed.")
         return v
-    
+
+
 class PostModel(PostBase):
     hashtags: List[str]
 
@@ -118,10 +120,11 @@ class PostModel(PostBase):
 class PostUpdate(PostModel):
     done: bool 
     updated_at: datetime
+    hashtags: List[str]
     
 class PostResponse(PostBase):
     id: int
-    hashtags: List[HashtagResponse] = []
+    hashtags: List[HashtagResponse]
     created_at: datetime
     updated_at: datetime
     
