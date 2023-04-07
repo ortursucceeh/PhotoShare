@@ -1,84 +1,53 @@
-import io
 import base64
 import cloudinary
-import os
 import pyqrcode
-
-from cloudinary.uploader import upload
+import io
 
 from sqlalchemy.orm import Session
-from src.conf.config import init_cloudinary, qr
-from src.tramsform_schemas import TransformCircleModel, TransformEffectModel, TransformResizeModel, TransformTextModel
 
 from src.database.models import Post, User
+from src.conf.config import init_cloudinary
+from src.tramsform_schemas import TransformBodyModel
 
 
-async def transform_metod_circle(post_id: int, body: TransformCircleModel, user: User, db: Session) -> Post | None:
+async def transform_metod(post_id: int, body: TransformBodyModel, user: User, db: Session) -> Post | None:
     post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
     if post:
-        if body.height and body.width:
-            transformation = [{'gravity': "face", 'height': f"{body.height}", 'width': f"{body.width}", 'crop': "thumb"},
+        transformation = []
+        if body.circle.usefull and body.circle. height and body.circle.width:
+            trans_list = [{'gravity': "face", 'height': f"{body.circle.height}", 'width': f"{body.circle.width}", 'crop': "thumb"},
             {'radius': "max"}]
-            url = cloudinary.CloudinaryImage(post.public_id).build_url(
-                transformation=transformation
-            )
-            post.transform_url = url
-            db.commit()
+            [transformation.append(elem) for elem in trans_list]
+        
+        if body.effect.usefull:
+            effect = ""
+            if body.effect.art_audrey:
+                effect = "art:audrey"
+            if body.effect.art_zorro:
+                effect = "art:zorro"
+            if body.effect.blur:
+                effect = "blur:300"
+            if body.effect.cartoonify:
+                effect = "cartoonify"
+            if effect:
+                transformation.append({"effect": f"{effect}"})
 
-        return post
+        if body.resize.usefull and body.resize.height and body.resize.height:
+            crop = ""
+            if body.resize.crop:
+                crop = "crop"
+            if body.resize.fill:
+                crop = "fill"
+            if crop:
+                trans_list = [{"gravity": "auto", 'height': f"{body.resize.height}", 'width': f"{body.resize.width}", 'crop': f"{crop}"}]
+                [transformation.append(elem) for elem in trans_list]
 
+        if body.text.usefull and body.text.font_size and body.text.text:
+            trans_list = [{'color': "#FFFF00", 'overlay': {'font_family': "Times", 'font_size': f"{body.text.font_size}", 'font_weight': "bold", 'text': f"{body.text.text}"}}, {'flags': "layer_apply", 'gravity': "south", 'y': 20}]
+            [transformation.append(elem) for elem in trans_list]
 
-async def transform_metod_effect(post_id: int, body: TransformEffectModel, user: User, db: Session) -> Post | None:
-    post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
-    if post:
-        transformation = []
-        effect = ""
-        if body.art_audrey:
-            effect = "art:audrey"
-        if body.art_zorro:
-            effect = "art:zorro"
-        if body.blur:
-            effect = "blur:300"
-        if body.cartoonify:
-            effect = "cartoonify"
-        if effect:
-            transformation.append({"effect": f"{effect}"})
-            url = cloudinary.CloudinaryImage(post.public_id).build_url(
-                transformation=transformation
-            )
-            post.transform_url = url
-            db.commit()
-
-        return post
-
-
-async def transform_metod_resize(post_id: int, body: TransformResizeModel, user: User, db: Session) -> Post | None:
-    post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
-    if post:
-        transformation = []
-        crop = ""
-        if body.crop:
-            crop = "crop"
-        if body.fill:
-            crop = "fill"
-        if crop:
-            transformation.append(
-            {"gravity": "auto", 'height': f"{body.height}", 'width': f"{body.width}", 'crop': f"{crop}"}
-            )
-            url = cloudinary.CloudinaryImage(post.public_id).build_url(
-                transformation=transformation
-            )
-            post.transform_url = url
-            db.commit()
-
-        return post
-
-
-async def transform_metod_text(post_id: int, body: TransformTextModel, user: User, db: Session) -> Post | None:
-    post= db.query(Post).filter(Post.user_id == user.id, Post.id == post_id).first()
-    if post:
-        if body.text:
-            transformation = [{'color': "#FFFF00", 'overlay': {'font_family': "Times", 'font_size': f"{body.font_size}", 'font_weight': "bold", 'text': f"{body.text}"}}, {'flags': "layer_apply", 'gravity': "south", 'y': 20}]
+        if transformation:
+            init_cloudinary()
             url = cloudinary.CloudinaryImage(post.public_id).build_url(
                 transformation=transformation
             )
