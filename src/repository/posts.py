@@ -7,26 +7,13 @@ from sqlalchemy.orm import Session
 from src.database.models import Post, Hashtag, User # Rating, Comment
 from src.schemas import PostModel, PostUpdate
 
+
 async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user.id).offset(skip).limit(limit).all()
 
+
 async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
-
-async def create_post(body: PostModel, user: User,  db: Session) -> Post:
-    hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
-    post = Post(
-        image_url=body.image_url,
-        title=body.title,
-        descr=body.descr,
-        hashtags=hashtags,
-        user=user,
-        done=True
-    )
-    db.add(post)
-    db.commit()
-    db.refresh(post)
-    return post
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:

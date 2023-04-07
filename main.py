@@ -10,6 +10,7 @@ from src.routes.comments import router as comment_router
 from src.routes.ratings import router as rating_router
 from src.routes.transform_post import router as trans_router
 from src.routes.hashtags import router as hashtag_router
+from src.routes.users import router as avatar_router
 
 app = FastAPI()
 
@@ -38,6 +39,7 @@ app.include_router(comment_router, prefix='/api')
 app.include_router(rating_router, prefix='/api')
 app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
+app.include_router(avatar_router, prefix='/api')
 
 
 if __name__ == '__main__':

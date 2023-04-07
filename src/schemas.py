@@ -1,5 +1,5 @@
 from datetime import datetime
-import sqlalchemy
+import json
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field, validator
 from enum import Enum
@@ -94,11 +94,12 @@ class RatingModel(RatingBase):
 
 # Post
 class PostBase(BaseModel):
-    image_url: str = Field(max_length=300)
+    image_url: str = Field(max_length=300, default=None)
     transform_url: str = Field(max_length=300, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
+    public_id: str = Field(max_length=50)
 
     # rating: float = None
     @validator("hashtags")
