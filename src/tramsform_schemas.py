@@ -17,6 +17,7 @@ class TransformEffectModel(BaseModel):
 
 class TransformResizeModel(BaseModel):
     usefull: bool = False
+
     crop: bool = False
     fill: bool = False
     height: int = Field(ge=0, default=400)
@@ -34,3 +35,4 @@ class TransformBodyModel(BaseModel):
     effect: TransformEffectModel
     resize: TransformResizeModel
     text: TransformTextModel
+

@@ -110,6 +110,7 @@ async def remove_post(post_id: int, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
 
+
 # @router.get("/with_hashtag/{hashtag_name}", response_model=PostResponse)
 # async def read_post(hashtag_name: int, db: Session = Depends(get_db)):
 #     posts = await repository_posts.get_posts_with_hashtag(hashtag_name, db)

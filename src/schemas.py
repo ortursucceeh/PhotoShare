@@ -41,13 +41,14 @@ class TokenModel(BaseModel):
 class HashtagBase(BaseModel):
     title: str = Field(max_length=50)
 
-
 class HashtagModel(HashtagBase):
     pass
 
 
 class HashtagResponse(HashtagBase):
     id: int
+    # user: UserDb
+    user_id: int
     created_at: datetime
 
     class Config:
@@ -99,9 +100,10 @@ class PostBase(BaseModel):
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
-    public_id: str = Field(max_length=50)
+    public_id: str = Field(max_length=50, default=None)
 
     # rating: float = None
+
     @validator("hashtags")
     def validate_tags(cls, v):
         if len(v or []) > 5:
@@ -117,15 +119,23 @@ class PostUpdate(PostModel):
     done: bool
     updated_at: datetime
 
+    hashtags: List[str]
+    
 
 class PostResponse(PostBase):
     id: int
-    hashtags: List[HashtagResponse] = []
+    hashtags: List[HashtagResponse]
     created_at: datetime
     updated_at: datetime
 
     class Config:
         orm_mode = True
 
-# class RequestEmail(BaseModel):
-#     email: EmailStr
+
+class RequestEmail(BaseModel):
+    email: EmailStr
+
+
+class RequestRole(BaseModel):
+    email: EmailStr
+    role: UserRoleEnum

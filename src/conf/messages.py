@@ -19,3 +19,9 @@ DB_CONNECT_ERROR = "Error connecting to the database"
 WELCOME_MESSAGE = "Welcome to FastAPI!"
 TOO_MANY_REQUESTS = 'No more than 10 requests per minute'
 INVALID_URL = "Invalid url"
+USER_NOT_ACTIVE = "User is banned"
+USER_ALREADY_NOT_ACTIVE = "User already is banned"
+USER_IS_LOGOUT = "User logout"
+USER_ROLE_EXIST = "Role is already exist"
+USER_CHANGE_ROLE_TO = "User role changed to"
+

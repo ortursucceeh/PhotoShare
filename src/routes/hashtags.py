@@ -25,6 +25,9 @@ from src.database.connect_db import get_db
 from src.schemas import HashtagBase, HashtagResponse
 from src.repository import hashtags as repository_tags
 
+from src.database.models import User
+from src.services.auth import auth_service
+
 router = APIRouter(prefix='/hashtags', tags=["hashtags"])
 
 
@@ -43,8 +46,22 @@ async def read_tag(tag_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=HashtagResponse)
-async def create_tag(body: HashtagBase, db: Session = Depends(get_db)):
-    return await repository_tags.create_tag(body, db)
+async def create_tag(body: HashtagBase, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+    return await repository_tags.create_tag(body, current_user, db)
+            
+
+@router.get("/by_user_id/{user_id}", response_model=List[HashtagResponse])
+async def read_hashtag(user_id: int, db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
+    hashtags = await repository_tags.get_tags_by_user_id(user_id, db)
+    if not hashtags:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return hashtags
+
+# @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
+# async def create_post(body: PostModel, db: Session = Depends(get_db),
+#             current_user: User = Depends(auth_service.get_current_user)):
+#     return await repository_posts.create_post(body, current_user, db)
 
 
 @router.put("/{hashtag_id}", response_model=HashtagResponse)
