@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from src.database.models import Post, Hashtag, User # Rating, Comment
+from src.database.models import Post, Hashtag, User, Comment, Rating
 from src.schemas import PostModel, PostUpdate
 
 async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
@@ -61,7 +61,10 @@ async def get_hashtags(post_id: int, db: Session) -> Hashtag: #
 
 
 # шукати по всім юзерам, без прив'язки до поточного --------------------
-# def get_all_posts
+async def get_all_posts(skip: int, limit: int, db: Session) -> List[Post]:
+    return db.query(Post).offset(skip).limit(limit).all()
+
+
 async def get_posts_by_title(post_title: str, user: User, db: Session) -> List[Post]:
     return db.query(Post).filter(and_(Post.user_id == user.id, func.lower(Post.title).like(f'%{post_title.lower()}%'))).all()
 
@@ -71,8 +74,14 @@ async def get_posts_by_user_id(user_id: int, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user_id).all()
 
 
-async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: #
+async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: 
     return db.query(Post).filter(func.lower(Post.user.username).like(f'%{user_name.lower()}%')).all()
+
+async def get_all_commented_posts(user: User, db: Session):
+    return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()
+
+async def get_all_liked_posts(user: User, db: Session):
+    return db.query(Post).join(Rating).filter(Rating.user_id == user.id).all()
 # ----------------------------------------------------------------
 
 
