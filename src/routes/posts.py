@@ -1,16 +1,17 @@
-from typing import List
+import cloudinary
+import cloudinary.uploader
 
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File
+from typing import List
 from sqlalchemy.orm import Session
-from fastapi_limiter.depends import RateLimiter
 
 from src.database.connect_db import get_db
-from src.database.models import Post
 from src.database.models import User
-from src.schemas import PostModel, PostUpdate, PostResponse
+from src.schemas import PostModel, PostResponse
 from src.repository import posts as repository_posts
 from src.services.auth import auth_service
-from src.conf.messages import TOO_MANY_REQUESTS, NOT_FOUND
+from src.conf.config import init_cloudinary
+from src.conf.messages import NOT_FOUND
 # from src.services.roles import RoleChecker
 from src.database.models import User, UserRoleEnum
 
@@ -41,6 +42,7 @@ async def read_post_by_id(post_id: int, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
 
+
 @router.get("/by_title/{post_title}", response_model=List[PostResponse])
 async def read_posts_with_title(post_title: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
@@ -70,8 +72,13 @@ async def read_post(user_name: str, db: Session = Depends(get_db),
 
 @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
 async def create_post(body: PostModel, db: Session = Depends(get_db),
-            current_user: User = Depends(auth_service.get_current_user)):
-    return await repository_posts.create_post(body, current_user, db)
+            file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user)):
+    
+    init_cloudinary()
+    cloudinary.uploader.upload(file.file, public_id='Photoshare', overwrite=True)
+    url = cloudinary.CloudinaryImage('Photoshare').build_url(width=250, height=250, crop='fill')
+
+    return await repository_posts.create_post(body, db, url, current_user)
 
 
 @router.put("/{post_id}", response_model=PostResponse)

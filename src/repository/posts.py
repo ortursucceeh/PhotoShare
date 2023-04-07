@@ -13,10 +13,11 @@ async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List
 async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
 
-async def create_post(body: PostModel, user: User,  db: Session) -> Post:
+async def create_post(body: PostModel, db: Session, url, user: User) -> Post:
     hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
     post = Post(
-        image_url=body.image_url,
+        # image_url=body.image_url,
+        image_url=url,
         title=body.title,
         descr=body.descr,
         hashtags=hashtags,
