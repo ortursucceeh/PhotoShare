@@ -51,6 +51,7 @@ class Post(Base):
     done = Column(Boolean, default=False)  # for update
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
+    public_id = Column(String(50))
 
 
    # -------------Ratings block----------------------------------

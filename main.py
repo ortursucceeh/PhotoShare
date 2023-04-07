@@ -12,6 +12,7 @@ from src.routes.transform_post import router as trans_router
 from src.routes.hashtags import router as hashtag_router
 from src.routes.users import router as users_router
 
+
 app = FastAPI()
 
 
@@ -40,6 +41,7 @@ app.include_router(rating_router, prefix='/api')
 app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
 app.include_router(users_router, prefix='/api')
+
 
 
 if __name__ == '__main__':

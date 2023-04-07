@@ -69,7 +69,7 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
 #     db.commit()
 
 
-async def update_avatar(email, url: str, db: Session) -> User:
+async def update_avatar(email: str, url: str, db: Session) -> User:
     """
     The update_avatar function updates the avatar of a user.
 
