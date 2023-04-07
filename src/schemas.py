@@ -99,7 +99,7 @@ class PostBase(BaseModel):
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
-    public_id: str = Field(max_length=50)
+    public_id: str = Field(max_length=50, default=None)
 
     # rating: float = None
     @validator("hashtags")

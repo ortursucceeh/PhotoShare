@@ -27,7 +27,6 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
         post.updated_at = datetime.now()
         post.user=user
         post.done = True
-        
         db.commit()
     return post
 
@@ -38,6 +37,7 @@ async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
         db.delete(post)
         db.commit()
     return post
+
 
 async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> Post: #
     return db.query(Post).filter(and_(Hashtag.title.like(f'%{hashtag_name}%'))).all()

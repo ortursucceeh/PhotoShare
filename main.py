@@ -24,7 +24,6 @@ def read_root():
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
     try:
-        # Make request
         result = db.execute(text("SELECT 1")).fetchone()
         if result is None:
             raise HTTPException(status_code=500, detail="Database is not configured correctly")
@@ -35,12 +34,12 @@ def healthchecker(db: Session = Depends(get_db)):
 
 
 app.include_router(auth_router, prefix='/api')
+app.include_router(users_router, prefix='/api')
 app.include_router(post_router, prefix='/api')
 app.include_router(comment_router, prefix='/api')
 app.include_router(rating_router, prefix='/api')
 app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
-app.include_router(users_router, prefix='/api')
 
 
 

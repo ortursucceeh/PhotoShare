@@ -36,7 +36,6 @@ async def create_comment(post_id: int, body: CommentBase, db: Session = Depends(
     :param db: Session: Pass the database session to the repository layer
     :param current_user: User: Get the current user from the database
     :return: The newly created comment
-    :doc-author: Trelent
     """
     new_comment = await repository_comments.create_comment(post_id, body, db, current_user)
     return new_comment
@@ -55,7 +54,6 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session = Depends
     :param db: Session: Pass the database session to the repository layer
     :param current_user: User: Check if the user is authorized to delete the comment
     :return: A comment object
-    :doc-author: Trelent
     """
     edited_comment = await repository_comments.edit_comment(comment_id, body, db, current_user)
     if edited_comment is None:
@@ -76,7 +74,6 @@ async def delete_comment(comment_id: int, db: Session = Depends(get_db),
     :param db: Session: Access the database
     :param current_user: User: Get the current user from the auth_service
     :return: A comment object
-    :doc-author: Trelent
     """
     deleted_comment = await repository_comments.delete_comment(comment_id, db, current_user)
     if deleted_comment is None:
@@ -98,7 +95,6 @@ async def single_comment(comment_id: int, db: Session = Depends(get_db),
     :param db: Session: Pass the database session to the function
     :param current_user: User: Get the user_id of the current logged in user
     :return: A single comment
-    :doc-author: Trelent
     """
     comment = await repository_comments.show_single_comment(comment_id, db, current_user)
     if comment is None:
@@ -119,7 +115,6 @@ async def post_all_comments(post_id: int, db: Session = Depends(get_db),
     :param db: Session: Pass the database session to the function
     :param current_user: User: Get the current user
     :return: A list of comments for a given post
-    :doc-author: Trelent
     """
     comments = await repository_comments.show_post_comments(post_id, db)
     if comments is None:
@@ -142,7 +137,6 @@ async def by_user_comments(user_id: int, db: Session = Depends(get_db),
     :param db: Session: Access the database
     :param current_user: User: Get the current user
     :return: The comments of the user
-    :doc-author: Trelent
     """
     comments = await repository_comments.show_user_comments(user_id, db)
     if comments is None:
@@ -166,7 +160,6 @@ async def by_user_post_comments(user_id: int, post_id: int, db: Session = Depend
     :param db: Session: Get the database session
     :param current_user: User: Check if the user is logged in
     :return: A list of comments
-    :doc-author: Trelent
     """
     comments = await repository_comments.show_user_post_comments(user_id, post_id, db)
     if comments is None:
