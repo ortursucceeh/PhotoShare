@@ -126,5 +126,11 @@ class PostResponse(PostBase):
     class Config:
         orm_mode = True
 
-# class RequestEmail(BaseModel):
-#     email: EmailStr
+
+class RequestEmail(BaseModel):
+    email: EmailStr
+
+
+class RequestRole(BaseModel):
+    email: EmailStr
+    role: UserRoleEnum
