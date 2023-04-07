@@ -34,6 +34,7 @@ async def create_tag(body: HashtagBase, user: User, db: Session) -> Hashtag:
         return tag
     
 
+
 async def update_tag(tag_id: int, body: HashtagBase, db: Session) -> Hashtag | None:
     tag = db.query(Hashtag).filter(Hashtag.id == tag_id).first()
     if tag:

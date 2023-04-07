@@ -7,23 +7,14 @@ from sqlalchemy.orm import Session
 from src.database.models import Post, Hashtag, User # Rating, Comment
 from src.schemas import PostModel, PostUpdate
 
+
 async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user.id).offset(skip).limit(limit).all()
+
 
 async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
 
-# async def create_post(body: PostModel, user: User,  db: Session) -> Post:
-#     # Get or create tags
-#     tags = []
-#     for tag_name in body.hashtags:
-#         tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
-#         if not tag:
-#             tag = Hashtag(title=tag_name)
-#             db.add(tag)
-#         tags.append(tag)
-#     db.refresh(tag)
-#     db.commit()
 
 async def create_post(body: PostModel, user: User,  db: Session) -> Post:
     # Get or create tags
@@ -61,8 +52,6 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
 
 
 
-
-
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
     post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
     if post:
@@ -82,7 +71,6 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
         post.updated_at = datetime.now()
         post.user = user
         post.done = True
-
         db.commit()
     return post
 
@@ -94,6 +82,7 @@ async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
         db.delete(post)
         db.commit()
     return post
+
 
 async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> Post: #
     return db.query(Post).filter(and_(Hashtag.title.like(f'%{hashtag_name}%'))).all()

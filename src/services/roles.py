@@ -36,5 +36,5 @@ class RoleChecker:
         :param current_user: User: Get the user object from the auth_service
         :return: The decorated function
         """
-        if current_user.roles not in self.allowed_roles:
+        if current_user.role not in self.allowed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Operation forbidden")

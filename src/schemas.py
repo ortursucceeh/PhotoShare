@@ -1,5 +1,5 @@
 from datetime import datetime
-import sqlalchemy
+import json
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field, validator
 from enum import Enum
@@ -39,73 +39,69 @@ class TokenModel(BaseModel):
 
 # Hashtag
 class HashtagBase(BaseModel):
-    title: str = Field(max_length=25)
-    
-    
+    title: str = Field(max_length=50)
+
 class HashtagModel(HashtagBase):
     pass
-    
+
 
 class HashtagResponse(HashtagBase):
     id: int
     # user: UserDb
     user_id: int
     created_at: datetime
-    
+
     class Config:
         orm_mode = True
-        
-        
-# Comment
-# class CommentBase(BaseModel):
-#     text: str = Field(max_length=500)
-    
-    
-# class CommentModel(CommentBase):
-#     pass
-    
-    
-# class CommentUpdate(CommentModel):
-#     done = bool
-    
-    
-# class CommentResponse(CommentModel):
-#     id: int
-#     created_at: datetime
-#     updated_at = datetime
-    
-#     class Config:
-#         orm_mode = True
-        
 
-# # Rating
-# class RatingBase(BaseModel):
-#     rate: float
-    
-    
-# class RatingModel(RatingBase):
-#     pass
-    
-    
-# class RatingUpdate(RatingModel):
-#     done = bool
-    
-    
-# class RatingResponse(RatingModel):
-#     id: int
-#     created_at: datetime
-#     updated_at = datetime
-    
-#     class Config:
-#         orm_mode = True
+
+# Comments
+class CommentBase(BaseModel):
+    text: str = Field(max_length=500)
+
+
+class CommentModel(CommentBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime]
+    user_id: int
+    post_id: int
+    update_status: bool
+
+    class Config:
+        orm_mode = True
+
+
+class CommentUpdate(CommentModel):
+    update_status: bool = True
+    updated_at = datetime
+
+    class Config:
+        orm_mode = True
+
+
+# Rating
+class RatingBase(BaseModel):
+    rate: int
+
+
+class RatingModel(RatingBase):
+    id: int
+    rate: int
+    created_at: datetime
+    post_id: int
+    user_id: int
 
 
 # Post
 class PostBase(BaseModel):
-    image_url: str = Field(max_length=300)
+    image_url: str = Field(max_length=300, default=None)
+    transform_url: str = Field(max_length=300, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: Optional[List[HashtagBase]] = None
+    public_id: str = Field(max_length=50, default=None)
+
     # rating: float = None
 
     @validator("hashtags")
@@ -120,19 +116,26 @@ class PostModel(PostBase):
 
 
 class PostUpdate(PostModel):
-    done: bool 
+    done: bool
     updated_at: datetime
+
     hashtags: List[str]
     
+
 class PostResponse(PostBase):
     id: int
     hashtags: List[HashtagResponse]
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         orm_mode = True
 
 
-# class RequestEmail(BaseModel):
-#     email: EmailStr
+class RequestEmail(BaseModel):
+    email: EmailStr
+
+
+class RequestRole(BaseModel):
+    email: EmailStr
+    role: UserRoleEnum
