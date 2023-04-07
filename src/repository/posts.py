@@ -30,10 +30,9 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
-    post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
-    if post:
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if user.role == 'Administrator' or post.user_id == user.id:
         hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
-        post.image_url = body.image_url
         post.title = body.title
         post.descr = body.descr
         post.hashtags = hashtags
@@ -46,11 +45,12 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
 
 
 async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
-    post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
-    if post:
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if user.role == 'Administrator' or post.user_id == user.id:
         db.delete(post)
         db.commit()
     return post
+
 
 async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> Post: #
     return db.query(Post).filter(and_(Hashtag.title.like(f'%{hashtag_name}%'))).all()
@@ -59,10 +59,15 @@ async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> Post: #
 async def get_hashtags(post_id: int, db: Session) -> Hashtag: #
     return db.query(Hashtag).filter(and_(Hashtag.post == post_id)).all()
 
+async def get_my_posts(user: User, db: Session) -> List[Post]:
+    return db.query(Post).filter(Post.user_id==user.id).all()
 
 # шукати по всім юзерам, без прив'язки до поточного --------------------
-async def get_all_posts(skip: int, limit: int, db: Session) -> List[Post]:
-    return db.query(Post).offset(skip).limit(limit).all()
+async def get_all_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
+    if user.role.like('Administrator'):
+        return db.query(Post).offset(skip).limit(limit).all()
+    else:
+        return []
 
 
 async def get_posts_by_title(post_title: str, user: User, db: Session) -> List[Post]:
