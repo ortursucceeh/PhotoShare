@@ -1,6 +1,6 @@
 import cloudinary
 import cloudinary.uploader
-
+from faker import Faker
 from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File, Form, requests, Request
 from typing import List
 from sqlalchemy import and_
@@ -72,9 +72,10 @@ async def read_post(user_name: str, db: Session = Depends(get_db),
 @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
 async def create_post(request: Request, title: str = Form(None), descr: str = Form(None), hashtags: List = Form(None),
 file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+    public_id = Faker().first_name()
     init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id='Photoshare', overwrite=True)
-    url = cloudinary.CloudinaryImage('Photoshare').build_url(width=250, height=250, crop='fill')
+    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
+    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
         
     hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(hashtags))).all()
     post = Post(
@@ -83,6 +84,7 @@ file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User
         descr=descr,
         hashtags=hashtags,
         user=current_user,
+        public_id=public_id,
         done=True
     )
     db.add(post)
