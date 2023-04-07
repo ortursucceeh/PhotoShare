@@ -9,7 +9,7 @@ from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.messages import (ALREADY_EXISTS, EMAIL_ALREADY_CONFIRMED, EMAIL_CONFIRMED,
                                EMAIL_NOT_CONFIRMED, INVALID_EMAIL, INVALID_PASSWORD, INVALID_TOKEN, SUCCESS_CREATE_USER,
-                               VERIFICATION_ERROR, CHECK_YOUR_EMAIL)
+                               VERIFICATION_ERROR, CHECK_YOUR_EMAIL, USER_NOT_ACTIVE)
 
 router = APIRouter(prefix='/auth', tags=["authentication"])
 security = HTTPBearer()
@@ -52,6 +52,12 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
     # if not user.is_verify:
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=EMAIL_NOT_CONFIRMED)
+    # Check is_active
+    if not user.is_active:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=USER_NOT_ACTIVE)
+    # Check is logout
+
+
     if not auth_service.verify_password(body.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_PASSWORD)
     # Generate JWT

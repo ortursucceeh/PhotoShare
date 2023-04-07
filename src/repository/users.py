@@ -1,7 +1,15 @@
+from typing import List
+
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from src.conf.messages import USER_NOT_ACTIVE
 from src.database.models import User, UserRoleEnum
 from src.schemas import UserModel
+
+
+async def get_users(skip: int, limit: int, db: Session) -> List[User]:
+    return db.query(User).offset(skip).limit(limit).all()
 
 
 async def get_user_by_email(email: str, db: Session) -> User:
@@ -66,9 +74,9 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     The update_avatar function updates the avatar of a user.
 
     Args:
-        email (str): The email address of the user to update.
-        url (str): The URL for the new avatar image.
-        db (Session, optional): A database session object to use instead of creating one locally. Defaults to None.  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQ
+    email (str): The email address of the user to update.
+    url (str): The URL for the new avatar image.
+    db (Session, optional): A database session object to use instead of creating one locally. Defaults to None.  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQ
 
     :param email: Find the user in the database
     :param url: str: Specify the type of data that is being passed into the function
@@ -79,3 +87,40 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     user.avatar = url
     db.commit()
     return user
+
+
+async def ban_user(email: str, db: Session) -> None:
+
+    """
+    The ban_user function takes in an email and a database session.
+    It then finds the user with that email, sets their is_active field to False,
+    and commits the change to the database.
+
+    :param email: str: Identify the user to be banned
+    :param db: Session: Pass in the database session
+    :return: None, because we don't need to return anything
+    :doc-author: Trelent
+    """
+    user = await get_user_by_email(email, db)
+    user.is_active = False
+    db.commit()
+
+
+async def make_user_role(email: str, role: UserRoleEnum, db: Session) -> None:
+
+    """
+    The make_user_role function takes in an email and a role, and then updates the user's role to that new one.
+    Args:
+    email (str): The user's email address.
+    role (UserRoleEnum): The new UserRoleEnum for the user.
+
+    :param email: str: Get the user by email
+    :param role: UserRoleEnum: Set the role of the user
+    :param db: Session: Pass the database session to the function
+    :return: None
+    :doc-author: Trelent
+    """
+    user = await get_user_by_email(email, db)
+    user.role = role
+    db.commit()
+
