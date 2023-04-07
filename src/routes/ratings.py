@@ -33,7 +33,6 @@ async def create_rate(post_id: int, rate: int = Path(description="From one to fi
     :param db: Session: Get the database session
     :param current_user: User: Get the current user from the database
     :return: The new rate
-    :doc-author: Trelent
     """
     new_rate = await repository_ratings.create_rate(post_id, rate, db, current_user)
     if new_rate is None:
@@ -55,7 +54,6 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     :param db: Session: Get the database session
     :param current_user: User: Get the current user from the auth_service
     :return: A rate object
-    :doc-author: Trelent
     """
     deleted_rate = await repository_ratings.delete_rate(rate_id, db, current_user)
     if deleted_rate is None:
@@ -72,7 +70,6 @@ async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(
     :param db: Session: Get the database connection
     :param current_user: User: Get the current user from the database
     :return: A list of all the ratings in the database
-    :doc-author: Trelent
     """
     comments = await repository_ratings.show_ratings(db, current_user)
     if comments is None:
@@ -95,7 +92,6 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     :param db: Session: Pass the database connection to the function
     :param current_user: User: Get the user_id from the token
     :return: A rating object
-    :doc-author: Trelent
     """
     rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
     if rate is None:
@@ -116,7 +112,6 @@ async def post_rating(post_id: int, current_user: User = Depends(auth_service.ge
     :param current_user: User: Get the current user from the database
     :param db: Session: Pass the database session to the function
     :return: A rating object
-    :doc-author: Trelent
     """
     rate = await repository_ratings.post_score(post_id, db, current_user)
     if rate is None:

@@ -1,12 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 import cloudinary
 import cloudinary.uploader
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from sqlalchemy.orm import Session
 
-from src.conf.messages import USER_ROLE_EXIST, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
-    USER_CHANGE_ROLE_TO
 
 from src.database.connect_db import get_db
 from src.repository import users as repository_users
@@ -15,6 +13,8 @@ from src.schemas import UserModel, UserResponse, RequestEmail, UserDb, RequestRo
 from src.conf.config import settings, init_cloudinary
 from src.services.auth import auth_service
 from src.services.roles import RoleChecker
+from src.conf.messages import USER_ROLE_EXIST, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
+    USER_CHANGE_ROLE_TO
 
 router = APIRouter(prefix='/users', tags=["users"])
 
@@ -38,6 +38,7 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     user = await repository_users.update_avatar(current_user.email, url, db)
     return user
     
+    
 @router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_user)])
 async def read_all_user(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
                         current_user: User = Depends(auth_service.get_current_user)):
@@ -49,7 +50,6 @@ async def read_all_user(skip: int = 0, limit: int = 10, db: Session = Depends(ge
     :param db: Session: Pass the database session to the function
     :param current_user: User: Get the current user
     :return: A list of users
-    :doc-author: Trelent
     """
     users = await repository_users.get_users(skip, limit, db)
     return users
@@ -66,7 +66,6 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db),
     :param db: Session: Connect to the database
     :param current_user: User: Get the current user
     :return: A dictionary with a message
-    :doc-author: Trelent
     """
     user = await repository_users.get_user_by_email(body.email, db)
 
@@ -92,7 +91,6 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db),
     :param db: Session: Get the database session
     :param current_user: User: Get the current user that is logged in
     :return: A message that the user's role has been changed
-    :doc-author: Trelent
     """
     user = await repository_users.get_user_by_email(body.email, db)
 

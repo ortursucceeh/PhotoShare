@@ -14,6 +14,7 @@ class TransformEffectModel(BaseModel):
     
 
 class TransformResizeModel(BaseModel):
+    use: bool = False
     crop: bool = False
     fill: bool = False
     height: int = Field(ge=0, default=400)
@@ -21,5 +22,9 @@ class TransformResizeModel(BaseModel):
 
 
 class TransformTextModel(BaseModel):
+    
     font_size: int = Field(ge=0, default=70)
+    resize: TransformResizeModel
+    effect: TransformEffectModel
+    circle: TransformCircleModel
     text: str = Field(max_length=100, default="")

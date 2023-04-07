@@ -22,7 +22,6 @@ async def create_comment(post_id: int, body: CommentBase, db: Session, user: Use
     :param db: Session: Access the database
     :param user: User: Get the user_id from the logged in user
     :return: The new comment
-    :doc-author: Trelent
     """
     new_comment = Comment(text=body.text, post_id=post_id, user_id=user.id)
     db.add(new_comment)
@@ -41,8 +40,7 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
     :param body: CommentBase: Get the text from the body of the request
     :param db: Session: Access the database
     :param user: User: Make sure that the comment is being edited by the user who created it
-    :return: A comment object if the comment was successfully edited,
-    :doc-author: Trelent
+    :return: A comment object if the comment was successfully edited
     """
     comment = db.query(Comment).filter(and_(Comment.id == comment_id, Comment.user_id == user.id)).first()
     if comment:
@@ -64,7 +62,6 @@ async def delete_comment(comment_id: int, db: Session, user: User) -> None:
     :param db: Session: Access the database
     :param user: User: Check if the user is the owner of the comment
     :return: A comment object
-    :doc-author: Trelent
     """
     comment = db.query(Comment).filter(and_(Comment.id == comment_id, Comment.user_id == user.id)).first()
     if comment:
@@ -87,7 +84,6 @@ async def show_single_comment(comment_id: int, db: Session, user: User) -> Comme
     :param db: Session: Access the database
     :param user: User: Retrieve the user's comments
     :return: A single comment
-    :doc-author: Trelent
     """
     return db.query(Comment).filter(and_(Comment.id == comment_id, Comment.user_id == user.id)).first()
 
@@ -102,7 +98,6 @@ async def show_post_comments(comment_id: int, db: Session) -> List[Comment] | No
     :param comment_id: int: Filter the comments by post_id
     :param db: Session: Pass the database session to the function
     :return: A list of comments that are associated with a post
-    :doc-author: Trelent
     """
     return db.query(Comment).filter(Comment.post_id == comment_id).all()
 
@@ -115,7 +110,6 @@ async def show_user_comments(user_id: int, db: Session) -> List[Comment] | None:
     :param user_id: int: Filter the comments by user_id
     :param db: Session: Pass the database session to the function
     :return: A list of comments for a given user_id
-    :doc-author: Trelent
     """
     return db.query(Comment).filter(Comment.user_id == user_id).all()
 
@@ -131,6 +125,5 @@ async def show_user_post_comments(user_id: int, post_id: int, db: Session) -> Li
     :param post_id: int: Filter the comments by post_id
     :param db: Session: Pass the database session to the function
     :return: A list of comment objects
-    :doc-author: Trelent
     """
     return db.query(Comment).filter(and_(Comment.id == post_id, Comment.user_id == user_id)).all()
