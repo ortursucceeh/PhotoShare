@@ -13,16 +13,36 @@ async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List
 async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
 
+# async def create_post(body: PostModel, user: User,  db: Session) -> Post:
+#     # Get or create tags
+#     tags = []
+#     for tag_name in body.hashtags:
+#         tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
+#         if not tag:
+#             tag = Hashtag(title=tag_name)
+#             db.add(tag)
+#         tags.append(tag)
+#     db.refresh(tag)
+#     db.commit()
+
 async def create_post(body: PostModel, user: User,  db: Session) -> Post:
     # Get or create tags
     tags = []
     for tag_name in body.hashtags:
         tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
-        if not tag:
-            tag = Hashtag(title=tag_name)
+        if tag:
+            tags.append(tag) 
+        elif not tag:
+            tag = Hashtag(
+            title=tag_name,
+            # user=user,
+            user_id = user.id,
+            )
             db.add(tag)
-        tags.append(tag)
-    db.commit()
+            tags.append(tag)
+            db.commit()
+            db.refresh(tag)
+    
 
     # Create note with tags
     post = Post(
@@ -37,6 +57,10 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
     db.commit()
     db.refresh(post)
     return post
+
+
+
+
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:

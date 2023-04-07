@@ -48,6 +48,8 @@ class HashtagModel(HashtagBase):
 
 class HashtagResponse(HashtagBase):
     id: int
+    # user: UserDb
+    user_id: int
     created_at: datetime
     
     class Config:
