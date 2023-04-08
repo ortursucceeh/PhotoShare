@@ -1,18 +1,18 @@
+import cloudinary
+import cloudinary.uploader
+from faker import Faker
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File, Form, requests, Request
 from typing import List
-
-from fastapi import APIRouter, HTTPException, Depends, status
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
-from fastapi_limiter.depends import RateLimiter
-
 from src.database.connect_db import get_db
-from src.database.models import Post
-from src.database.models import User
-from src.schemas import PostModel, PostUpdate, PostResponse
+from src.database.models import User, Post, Hashtag
+from src.schemas import PostModel, PostResponse
 from src.repository import posts as repository_posts
 from src.services.auth import auth_service
-from src.conf.messages import TOO_MANY_REQUESTS, NOT_FOUND
+from src.conf.config import init_cloudinary
+from src.conf.messages import NOT_FOUND
 # from src.services.roles import RoleChecker
-from src.database.models import User, UserRoleEnum
 
 router = APIRouter(prefix='/posts', tags=["posts"])
 
@@ -40,6 +40,7 @@ async def read_post_by_id(post_id: int, db: Session = Depends(get_db),
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
+
 
 @router.get("/by_title/{post_title}", response_model=List[PostResponse])
 async def read_posts_with_title(post_title: str, db: Session = Depends(get_db),
@@ -96,9 +97,27 @@ async def read_my_posts(current_user: User = Depends(auth_service.get_current_us
 
 
 @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
-async def create_post(body: PostModel, db: Session = Depends(get_db),
-            current_user: User = Depends(auth_service.get_current_user)):
-    return await repository_posts.create_post(body, current_user, db)
+async def create_post(request: Request, title: str = Form(None), descr: str = Form(None), hashtags: List = Form(None),
+file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+    public_id = Faker().first_name()
+    init_cloudinary()
+    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
+    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
+        
+    hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(hashtags))).all()
+    post = Post(
+        image_url=url,
+        title=title,
+        descr=descr,
+        hashtags=hashtags,
+        user=current_user,
+        public_id=public_id,
+        done=True
+    )
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return post
 
 
 @router.put("/{post_id}", response_model=PostResponse)
@@ -117,6 +136,7 @@ async def remove_post(post_id: int, db: Session = Depends(get_db),
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return post
+
 
 # @router.get("/with_hashtag/{hashtag_name}", response_model=PostResponse)
 # async def read_post(hashtag_name: int, db: Session = Depends(get_db)):

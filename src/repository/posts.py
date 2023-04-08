@@ -7,19 +7,40 @@ from sqlalchemy.orm import Session
 from src.database.models import Post, Hashtag, User, Comment, Rating, UserRoleEnum
 from src.schemas import PostModel, PostUpdate
 
+
 async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user.id).offset(skip).limit(limit).all()
+
 
 async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
 
+
 async def create_post(body: PostModel, user: User,  db: Session) -> Post:
-    hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
+    # Get or create tags
+    tags = []
+    for tag_name in body.hashtags:
+        tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
+        if tag:
+            tags.append(tag) 
+        elif not tag:
+            tag = Hashtag(
+            title=tag_name,
+            # user=user,
+            user_id = user.id,
+            )
+            db.add(tag)
+            tags.append(tag)
+            db.commit()
+            db.refresh(tag)
+    
+
+    # Create note with tags
     post = Post(
         image_url=body.image_url,
         title=body.title,
         descr=body.descr,
-        hashtags=hashtags,
+        hashtags=tags,
         user=user,
         done=True
     )
@@ -29,19 +50,22 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
     return post
 
 
+
+
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
     post = db.query(Post).filter(Post.id == post_id).first()
     if user.role == UserRoleEnum.admin or post.user_id == user.id:
         hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
+
         post.title = body.title
         post.descr = body.descr
-        post.hashtags = hashtags
+        post.hashtags = tags
         post.updated_at = datetime.now()
-        post.user=user
+        post.user = user
         post.done = True
-        
         db.commit()
     return post
+
 
 
 async def remove_post(post_id: int, user: User, db: Session) -> Post | None:

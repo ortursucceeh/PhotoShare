@@ -1,14 +1,48 @@
-import enum
+body = {
+  "circle": {
+    "usefull": False,
+    "height": 400,
+    "width": 400
+  },
+  "effect": {
+    "usefull": False,
+    "art_audrey": False,
+    "art_zorro": False,
+    "blur": False,
+    "cartoonify": False
+  },
+  "resize": {
+    "usefull": False,
+    "crop": False,
+    "fill": False,
+    "height": 400,
+    "width": 400
+  },
+  "text": {
+    "usefull": False,
+    "font_size": 70,
+    "text": ""
+  }
+}
 
-class BugStatus(enum.Enum):
 
-    new = 7
-    incomplete = 6
-    invalid = 5
-    wont_fix = 4
-    in_progress = 3
-    fix_committed = 2
-    fix_released = 1
+a = body["text"]["text"]
+print(a)
 
-print('\nMember name: {}'.format(BugStatus.wont_fix.name)) 
-print('Member value: {}'.format(BugStatus.wont_fix.value))
+# import cloudinary
+# from src.conf.config import init_cloudinary
+# from cloudinary.uploader import destroy
+# import cloudinary.uploader
+
+
+# def dell():
+#   init_cloudinary()
+#   cloudinary.uploader.destroy("Vasya")
+# dell()
+
+# init_cloudinary()
+# transformation = [{'gravity': "face", 'height': 400, 'width': 400, 'crop': "thumb"}, {'radius': "max"}, {"effect": "art:audrey"}, {'color': "#FFFF00", 'overlay': {'font_family': "Times", 'font_size': 70, 'font_weight': "bold", 'text': "Cooooool"}}, {'flags': "layer_apply", 'gravity': "south", 'y': 20}]
+# url = cloudinary.CloudinaryImage("Amber").build_url(
+#                 transformation=transformation
+#             )
+# print(url)

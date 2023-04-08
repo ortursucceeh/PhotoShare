@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Request, Path
 
 from sqlalchemy.orm import Session
+from typing import List, Union
 
 from src.database.connect_db import get_db
 from src.schemas import RatingModel
@@ -33,7 +34,6 @@ async def create_rate(post_id: int, rate: int = Path(description="From one to fi
     :param db: Session: Get the database session
     :param current_user: User: Get the current user from the database
     :return: The new rate
-    :doc-author: Trelent
     """
     new_rate = await repository_ratings.create_rate(post_id, rate, db, current_user)
     if new_rate is None:
@@ -55,7 +55,6 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     :param db: Session: Get the database session
     :param current_user: User: Get the current user from the auth_service
     :return: A rate object
-    :doc-author: Trelent
     """
     deleted_rate = await repository_ratings.delete_rate(rate_id, db, current_user)
     if deleted_rate is None:
@@ -63,7 +62,7 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     return deleted_rate
 
 
-@router.get("/all", response_model=RatingModel, dependencies=[Depends(allowed_get_ratings)])
+@router.get("/all", response_model=List[RatingModel], dependencies=[Depends(allowed_get_ratings)])
 async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     """
     The all_rates function returns all the ratings in the database.
@@ -72,7 +71,6 @@ async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(
     :param db: Session: Get the database connection
     :param current_user: User: Get the current user from the database
     :return: A list of all the ratings in the database
-    :doc-author: Trelent
     """
     comments = await repository_ratings.show_ratings(db, current_user)
     if comments is None:
@@ -95,7 +93,6 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     :param db: Session: Pass the database connection to the function
     :param current_user: User: Get the user_id from the token
     :return: A rating object
-    :doc-author: Trelent
     """
     rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
     if rate is None:
@@ -103,7 +100,7 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     return rate
 
 
-@router.get("/post/{post_id}", response_model=RatingModel, dependencies=[Depends(allowed_get_ratings)])
+@router.get("/post/{post_id}", response_model=dict, dependencies=[Depends(allowed_get_ratings)])
 async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
                       db: Session = Depends(get_db)
                       ):
@@ -112,9 +109,9 @@ async def post_rating(post_id: int, current_user: User = Depends(auth_service.ge
         The function takes in the post_id and current_user as parameters,
         and returns the rating of that particular user on that particular post.
 
-    :param post_id: int: Specify the post that is being rated
+    :param post_id: int: Identify the post that is being rated
     :param current_user: User: Get the current user from the database
-    :param db: Session: Pass the database session to the function
+    :param db: Session: Access the database
     :return: A rating object
     :doc-author: Trelent
     """
