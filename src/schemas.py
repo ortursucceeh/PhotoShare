@@ -1,8 +1,7 @@
 from datetime import datetime
-import json
 from typing import List, Optional
+
 from pydantic import BaseModel, EmailStr, Field, validator
-from enum import Enum
 
 from src.database.models import UserRoleEnum
 

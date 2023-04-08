@@ -65,6 +65,19 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
+@router.post("/logout")
+async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
+                 db: Session = Depends(get_db)):
+
+    # Get the access token from the current user
+
+    token = credentials.credentials
+
+    # Add the access token to the blacklist_tokens table
+    await repository_users.add_to_blacklist(token, db)
+    return {"message": USER_IS_LOGOUT}
+
+
 @router.get('/refresh_token', response_model=TokenModel)
 async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(security), db: Session = Depends(get_db)):
     """
@@ -138,14 +151,3 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     return {"message": CHECK_YOUR_EMAIL}
 
 
-@router.post("/logout")
-async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
-                 db: Session = Depends(get_db)):
-
-    # Get the access token from the current user
-
-    token = credentials.credentials
-
-    # Add the access token to the blacklist_tokens table
-    await repository_users.add_to_blacklist(token, db)
-    return {"message": USER_IS_LOGOUT}

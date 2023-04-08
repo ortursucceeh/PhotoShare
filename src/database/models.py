@@ -34,8 +34,8 @@ post_m2m_hashtag = Table(
     "post_m2m_hashtag",
     Base.metadata,
     Column("id", Integer, primary_key=True, autoincrement=True, default=1),
-    Column("post_id", Integer, ForeignKey("posts.id", ondelete="CASCADE")),
-    Column("hashtag_id", Integer, ForeignKey("hashtags.id", ondelete="CASCADE")),
+    Column("post_id", Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True),
+    Column("hashtag_id", Integer, ForeignKey("hashtags.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
@@ -44,8 +44,8 @@ class Post(Base):
     id = Column(Integer, primary_key=True)
     image_url = Column(String(200))
     transform_url = Column(String(200))
-    title = Column(String(50))
-    descr = Column(String(150), nullable=False)
+    title = Column(String(50), nullable=True)
+    descr = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
     done = Column(Boolean, default=False)  # for update
@@ -53,13 +53,13 @@ class Post(Base):
     hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
     public_id = Column(String(50))
 
-    # -------------Ratings block----------------------------------
-    # @aggregated('post_total_rating', Column(Numeric))
-    # def avg_rating(self):
-    #    return func.avg(Rating.rate)
-    #
-    # post_total_rating = relationship('Rating', backref="posts")
-    # -----------------------------------------------------------
+    #-------------Ratings block----------------------------------
+    @aggregated('rating', Column(Numeric))
+    def avg_rating(self):
+       return func.avg(Rating.rate)
+    
+    rating = relationship('Rating')
+    #-----------------------------------------------------------
     user = relationship('User', backref="posts")
 
 
@@ -103,4 +103,4 @@ class BlacklistToken(Base):
     __tablename__ = 'blacklist_tokens'
     id = Column(Integer, primary_key=True)
     token = Column(String(500), unique=True, nullable=False)
-    blacklisted_on = Column(DateTime, nullable=False)
+    blacklisted_on = Column(DateTime, default=func.now())
