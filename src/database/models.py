@@ -39,8 +39,6 @@ post_m2m_hashtag = Table(
 )
 
 
-
-
 class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True)
@@ -55,13 +53,12 @@ class Post(Base):
     hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
     public_id = Column(String(50))
 
-
-   # -------------Ratings block----------------------------------
-    #@aggregated('post_total_rating', Column(Numeric))
-    #def avg_rating(self):
-     #   return func.avg('ratings.rate')
-
-    #rating = relationship('Rating', backref="posts")
+    # -------------Ratings block----------------------------------
+    # @aggregated('post_total_rating', Column(Numeric))
+    # def avg_rating(self):
+    #    return func.avg(Rating.rate)
+    #
+    # post_total_rating = relationship('Rating', backref="posts")
     # -----------------------------------------------------------
     user = relationship('User', backref="posts")
 

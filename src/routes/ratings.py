@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Request, Path
 
 from sqlalchemy.orm import Session
+from typing import List, Union
 
 from src.database.connect_db import get_db
 from src.schemas import RatingModel
@@ -61,7 +62,7 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     return deleted_rate
 
 
-@router.get("/all", response_model=RatingModel, dependencies=[Depends(allowed_get_ratings)])
+@router.get("/all", response_model=List[RatingModel], dependencies=[Depends(allowed_get_ratings)])
 async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     """
     The all_rates function returns all the ratings in the database.
@@ -99,7 +100,7 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     return rate
 
 
-@router.get("/post/{post_id}", response_model=RatingModel, dependencies=[Depends(allowed_get_ratings)])
+@router.get("/post/{post_id}", response_model=dict, dependencies=[Depends(allowed_get_ratings)])
 async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
                       db: Session = Depends(get_db)
                       ):
@@ -108,10 +109,11 @@ async def post_rating(post_id: int, current_user: User = Depends(auth_service.ge
         The function takes in the post_id and current_user as parameters,
         and returns the rating of that particular user on that particular post.
 
-    :param post_id: int: Specify the post that is being rated
+    :param post_id: int: Identify the post that is being rated
     :param current_user: User: Get the current user from the database
-    :param db: Session: Pass the database session to the function
+    :param db: Session: Access the database
     :return: A rating object
+    :doc-author: Trelent
     """
     rate = await repository_ratings.post_score(post_id, db, current_user)
     if rate is None:

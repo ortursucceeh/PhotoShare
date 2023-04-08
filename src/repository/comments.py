@@ -126,4 +126,4 @@ async def show_user_post_comments(user_id: int, post_id: int, db: Session) -> Li
     :param db: Session: Pass the database session to the function
     :return: A list of comment objects
     """
-    return db.query(Comment).filter(and_(Comment.id == post_id, Comment.user_id == user_id)).all()
+    return db.query(Comment).filter(and_(Comment.post_id == post_id, Comment.user_id == user_id)).all()

@@ -25,6 +25,9 @@ fastapi-mail = "^1.2.6"
 sqlalchemy-utils = "^0.40.0"
 pytest = "^7.2.2"
 faker = "^18.4.0"
+django-qrcode = "^0.3"
+qrcode = "^7.4.2"
+pyqrcode = "^1.2.1"
 
 
 [build-system]
