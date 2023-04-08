@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from fastapi import HTTPException, status
@@ -11,6 +12,20 @@ from src.schemas import UserModel
 async def get_users(skip: int, limit: int, db: Session) -> List[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
+# get_user_by_username
+# @router.get("/by_username/{user_name}", response_model=List[PostResponse])
+# async def read_posts_by_username(user_name: str, db: Session = Depends(get_db),
+#             current_user: User = Depends(auth_service.get_current_user)):
+#     posts = await repository_posts.get_posts_by_username(user_name, db)
+#     if not posts:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+#     return posts
+
+# async def get_all_commented_posts(user: User, db: Session):
+#     return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()
+
+# async def get_all_liked_posts(user: User, db: Session):
+#     return db.query(Post).join(Rating).filter(Rating.user_id == user.id).all()
 
 async def get_user_by_email(email: str, db: Session) -> User:
     """
@@ -124,9 +139,17 @@ async def make_user_role(email: str, role: UserRoleEnum, db: Session) -> None:
     user.role = role
     db.commit()
 
+async def find_blacklisted_token(token: str, db: Session) -> None:
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    return blacklist_token
+    
 
 async def add_to_blacklist(token: str, db: Session) -> None:
     blacklist_token = BlacklistToken(token=token, blacklisted_on=datetime.now())
     db.add(blacklist_token)
     db.commit()
     db.refresh(blacklist_token)
+    
+async def remove_from_blacklist(token: str, db: Session) -> None:
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    db.delete(blacklist_token)

@@ -1,8 +1,7 @@
 from datetime import datetime
-import json
 from typing import List, Optional
+
 from pydantic import BaseModel, EmailStr, Field, validator
-from enum import Enum
 
 from src.database.models import UserRoleEnum
 
@@ -29,8 +28,7 @@ class UserDb(BaseModel):
 class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
-
-
+    
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
@@ -49,7 +47,6 @@ class HashtagModel(HashtagBase):
 
 class HashtagResponse(HashtagBase):
     id: int
-    # user: UserDb
     user_id: int
     created_at: datetime
 
@@ -68,7 +65,7 @@ class CommentModel(CommentBase):
     updated_at: Optional[datetime]
     user_id: int
     post_id: int
-    update_status: bool
+    update_status: bool = False
 
     class Config:
         orm_mode = True
@@ -103,8 +100,7 @@ class PostBase(BaseModel):
     transform_url: str = Field(max_length=300, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
-    hashtags: Optional[List[HashtagBase]] = None
-    public_id: str = Field(max_length=50, default=None)
+    hashtags: List[str] = []
 
     # rating: float = None
 
@@ -116,14 +112,16 @@ class PostBase(BaseModel):
 
 
 class PostModel(PostBase):
-    hashtags: List[str]
+    pass
 
 
-class PostUpdate(PostModel):
-    done: bool
-    updated_at: datetime
+class PostUpdate(BaseModel):
+    title: str = Field(max_length=45)
+    descr: str = Field(max_length=450)
+    hashtags: List[str] = []
+    
 
-    hashtags: List[str]
+
 
 
 class PostResponse(PostBase):
@@ -131,7 +129,7 @@ class PostResponse(PostBase):
     hashtags: List[HashtagResponse]
     created_at: datetime
     updated_at: datetime
-
+    
     class Config:
         orm_mode = True
 

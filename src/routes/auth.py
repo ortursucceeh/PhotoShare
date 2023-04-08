@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.database.models import User
 from src.services.email import send_email
 from src.database.connect_db import get_db
-from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail  # , RequestEmail
+from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.messages import (ALREADY_EXISTS, EMAIL_ALREADY_CONFIRMED, EMAIL_CONFIRMED,
@@ -49,8 +49,11 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     :return: A dict with the access_token, refresh_token and token type
     """
     user = await repository_users.get_user_by_email(body.username, db)
+    # token = credentials.credentials
+    # 
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
+    
     if not user.is_verify:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=EMAIL_NOT_CONFIRMED)
     # Check is_active
@@ -65,8 +68,19 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
+@router.post("/logout")
+async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
+                 db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
+    token = credentials.credentials
+
+    await repository_users.add_to_blacklist(token, db)
+    return {"message": USER_IS_LOGOUT}
+
+
 @router.get('/refresh_token', response_model=TokenModel)
-async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(security), db: Session = Depends(get_db)):
+async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(security), db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
     """
     The refresh_token function is used to refresh the access token.
     It takes in a refresh token and returns an access_token, a new refresh_token, and the type of token (bearer).
@@ -138,14 +152,3 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     return {"message": CHECK_YOUR_EMAIL}
 
 
-@router.post("/logout")
-async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
-                 db: Session = Depends(get_db)):
-
-    # Get the access token from the current user
-
-    token = credentials.credentials
-
-    # Add the access token to the blacklist_tokens table
-    await repository_users.add_to_blacklist(token, db)
-    return {"message": USER_IS_LOGOUT}

@@ -36,10 +36,10 @@ def healthchecker(db: Session = Depends(get_db)):
 app.include_router(auth_router, prefix='/api')
 app.include_router(users_router, prefix='/api')
 app.include_router(post_router, prefix='/api')
-app.include_router(comment_router, prefix='/api')
-app.include_router(rating_router, prefix='/api')
 app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
+app.include_router(comment_router, prefix='/api')
+app.include_router(rating_router, prefix='/api')
 
 
 
