@@ -12,24 +12,56 @@ from src.database.models import Rating, User, Post
 # from src.schemas import RatingModel, UserModel, UserDb
 
 
-async def create_rate(post_id: int, rate: int, db: Session, user: User) -> HTTPException | Rating:
+async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Rating:
 
+    """
+    The create_rate function creates a new rate for the post with the given id.
+        Args:
+            post_id (int): The id of the post to be rated.
+            rate (int): The rating value, either 1 or - 1.
+
+    :param post_id: int: Get the post id from the request
+    :param rate: int: Set the rate of the post
+    :param db: Session: Access the database
+    :param user: User: Get the user_id of the logged in user
+    :return: A rating object
+    :doc-author: Trelent
+    """
     is_self_post = db.query(Post).filter(and_(Post.id == post_id, Post.user_id == user.id)).first()
     already_voted = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user.id)).first()
     post_exists = db.query(Post).filter(Post.id == post_id).first()
     if is_self_post:
-        return HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible vote for own post.")
+        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible vote for own post.")
     elif already_voted:
-        return HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to vote twice.")
+        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to vote twice.")
     elif post_exists:
-        new_rate = Rating(post_id=post_id, rate=rate, user_id=user.id)
+        new_rate = Rating(
+            post_id=post_id,
+            rate=rate,
+            user_id=user.id)
+
         db.add(new_rate)
         db.commit()
         db.refresh(new_rate)
+        print(vars(new_rate))
+        print(type(new_rate))
         return new_rate
 
 
-async def delete_rate(rate_id: int, db: Session, user: User) -> Rating:
+async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
+
+    """
+    The delete_rate function deletes a rating from the database.
+        Args:
+            rate_id (int): The id of the rating to be deleted.
+            db (Session): A connection to the database.
+
+    :param rate_id: int: Specify the id of the rate to be deleted
+    :param db: Session: Access the database
+    :param user: User: Check if the user is logged in
+    :return: The deleted rate
+    :doc-author: Trelent
+    """
     rate = db.query(Rating).filter(Rating.id == rate_id).first()
     if rate:
         db.delete(rate)
@@ -37,18 +69,55 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Rating:
         return rate
 
 
-async def show_ratings(db: Session, user: User) -> List[Rating]:
+async def show_ratings(db: Session, user: User) -> list[Type[Rating]]:
+    """
+    The show_ratings function returns a list of all ratings in the database.
+        Args:
+            db (Session): The database session to use for querying.
+            user (User): The user making the request.
+
+    :param db: Session: Access the database
+    :param user: User: Get the user's id and pass it to the query
+    :return: A list of rating objects
+    :doc-author: Trelent
+    """
     all_ratings = db.query(Rating).all()
     return all_ratings
 
 
-async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) -> Rating:
-    user_p_rate = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user_id)).all()
+async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) -> Type[Rating] | None:
+    """
+    The user_rate_post function takes in a user_id, post_id, db and user.
+    It then queries the database for any ratings that match both the post id and the user id.
+    If there is a rating it returns it.
+
+    :param user_id: int: Identify the user who is rating the post
+    :param post_id: int: Get the post_id from the database
+    :param db: Session: Access the database
+    :param user: User: Check if the user is logged in or not
+    :return: The rating of the user for a specific post
+    :doc-author: Trelent
+    """
+    user_p_rate = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user_id)).first()
     return user_p_rate
 
 
 async def post_score(post_id: int, db: Session, user: User):
-    # post = db.query(Post).filter(Post.id == post_id).first()
-    # total_post_rating = post.avg_rating()
+    """
+    The post_score function takes in a post_id and returns the average rating of that post.
+        Args:
+            post_id (int): The id of the Post to be rated.
+            db (Session): A database session object used for querying data from the database.
 
-    return None #total_post_rating
+    :param post_id: int: Identify which post is being rated
+    :param db: Session: Access the database
+    :param user: User: Get the user id of the current logged in user
+    :return: The average rating of a post
+    :doc-author: Trelent
+    """
+    total_post_rating = db.query(func.avg(Rating.rate).label('average')).filter(Rating.post_id == post_id).first()
+    response = {"score": total_post_rating[0]}
+
+    return response
+
+

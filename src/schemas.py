@@ -41,6 +41,7 @@ class TokenModel(BaseModel):
 class HashtagBase(BaseModel):
     title: str = Field(max_length=50)
 
+
 class HashtagModel(HashtagBase):
     pass
 
@@ -87,10 +88,12 @@ class RatingBase(BaseModel):
 
 class RatingModel(RatingBase):
     id: int
-    rate: int
     created_at: datetime
     post_id: int
     user_id: int
+
+    class Config:
+        orm_mode = True
 
 
 # Post
@@ -120,7 +123,7 @@ class PostUpdate(PostModel):
     updated_at: datetime
 
     hashtags: List[str]
-    
+
 
 class PostResponse(PostBase):
     id: int
