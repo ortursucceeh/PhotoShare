@@ -33,6 +33,9 @@ async def read_my_profile(current_user: User = Depends(auth_service.get_current_
 #edit_me
 #get_user_by_name(count_of_posts)
 
+# async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: 
+#     return db.query(Post).filter(func.lower(Post.user.username).like(f'%{user_name.lower()}%')).all()
+
 @router.patch('/avatar', response_model=UserDb)
 async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
                              db: Session = Depends(get_db)):
@@ -49,6 +52,21 @@ async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(g
     users = await repository_users.get_users(skip, limit, db)
     return users
 
+# @router.get("/commented-posts/", response_model=List[PostResponse])
+# async def read_commented_posts_by_me(db: Session = Depends(get_db),
+#             current_user: User = Depends(auth_service.get_current_user)):
+#     posts = await repository_posts.get_all_commented_posts(current_user, db)
+#     if not posts:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+#     return posts
+
+# @router.get("/my-rated-posts/", response_model=List[PostResponse])
+# async def read_liked_posts_by_me(db: Session = Depends(get_db),
+#             current_user: User = Depends(auth_service.get_current_user)):
+#     posts = await repository_posts.get_all_liked_posts(current_user, db)
+#     if not posts:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+#     return posts
 
 @router.patch("/ban/{email}", dependencies=[Depends(allowed_ban_user)])
 async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):

@@ -25,5 +25,6 @@ USER_IS_LOGOUT = "User logout"
 USER_ROLE_EXISTS = "Role is already exists"
 USER_CHANGE_ROLE_TO = "User role changed to"
 USER_IS_LOGOUT = "Successfully logged out!"
+TOO_MANY_HASHTAGS = "Too many hashtags! Maximum 5."
 
 
