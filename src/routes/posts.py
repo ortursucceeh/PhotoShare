@@ -17,6 +17,13 @@ router = APIRouter(prefix='/posts', tags=["posts"])
 allowed_get_all_posts = RoleChecker([UserRoleEnum.admin])
 
 
+
+@router.post("/new/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
+async def create_post(request: Request, title: str = Form(None), descr: str = Form(None), hashtags: List = Form(None),
+file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+    return await repository_posts.create_post(request, title, descr, hashtags, file, db, current_user)
+
+
 @router.get("/my_posts", response_model=List[PostResponse])
 async def read_all_user_posts(skip: int = 0, limit: int = 100, current_user: User = Depends(auth_service.get_current_user), 
                               db: Session = Depends(get_db)):
@@ -77,11 +84,6 @@ async def read_post_comments(post_id: int, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts
 
-
-@router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
-async def create_post(request: Request, title: str = Form(None), descr: str = Form(None), hashtags: List = Form(None),
-file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
-    return await repository_posts.create_post(request, title, descr, hashtags, file, db, current_user)
 
 
 @router.put("/{post_id}", response_model=PostResponse)
