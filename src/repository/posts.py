@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from src.database.models import Post, Hashtag, User, Comment, Rating
+from src.database.models import Post, Hashtag, User, Comment, Rating, UserRoleEnum
 from src.schemas import PostModel, PostUpdate
 
 async def get_user_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
@@ -31,7 +31,7 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
     post = db.query(Post).filter(Post.id == post_id).first()
-    if user.role == 'Administrator' or post.user_id == user.id:
+    if user.role == UserRoleEnum.admin or post.user_id == user.id:
         hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
         post.title = body.title
         post.descr = body.descr
@@ -46,7 +46,7 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
 
 async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
     post = db.query(Post).filter(Post.id == post_id).first()
-    if user.role == 'Administrator' or post.user_id == user.id:
+    if user.role == UserRoleEnum.admin or post.user_id == user.id:
         db.delete(post)
         db.commit()
     return post
@@ -64,7 +64,7 @@ async def get_my_posts(user: User, db: Session) -> List[Post]:
 
 # шукати по всім юзерам, без прив'язки до поточного --------------------
 async def get_all_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
-    if user.role.like('Administrator'):
+    if user.role == UserRoleEnum.admin:
         return db.query(Post).offset(skip).limit(limit).all()
     else:
         return []
