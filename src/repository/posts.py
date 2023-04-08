@@ -1,9 +1,15 @@
+import cloudinary
+import cloudinary.uploader
+
 from typing import List
 from datetime import datetime
+from fastapi import Request, UploadFile
+from faker import Faker
 
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
+from src.conf.config import init_cloudinary
 from src.database.models import Post, Hashtag, User # Rating, Comment
 from src.schemas import PostModel, PostUpdate
 
@@ -16,40 +22,70 @@ async def get_post(post_id: int, user: User, db: Session) -> Post:
     return db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
 
 
-async def create_post(body: PostModel, user: User,  db: Session) -> Post:
-    # Get or create tags
-    tags = []
-    for tag_name in body.hashtags:
-        tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
-        if tag:
-            tags.append(tag) 
-        elif not tag:
-            tag = Hashtag(
-            title=tag_name,
-            # user=user,
-            user_id = user.id,
-            )
-            db.add(tag)
-            tags.append(tag)
-            db.commit()
-            db.refresh(tag)
+# async def create_post(body: PostModel, user: User,  db: Session) -> Post:
+#     # Get or create tags
+#     tags = []
+#     for tag_name in body.hashtags:
+#         tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
+#         if tag:
+#             tags.append(tag) 
+#         elif not tag:
+#             tag = Hashtag(
+#             title=tag_name,
+#             # user=user,
+#             user_id = user.id,
+#             )
+#             db.add(tag)
+#             tags.append(tag)
+#             db.commit()
+#             db.refresh(tag)
     
 
-    # Create note with tags
+#     # Create note with tags
+#     post = Post(
+#         image_url=body.image_url,
+#         title=body.title,
+#         descr=body.descr,
+#         hashtags=tags,
+#         user=user,
+#         done=True
+#     )
+#     db.add(post)
+#     db.commit()
+#     db.refresh(post)
+#     return post
+
+
+async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
+    public_id = Faker().first_name()
+    init_cloudinary()
+    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
+    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
+    tags = []
+    for tag_name in hashtags:
+        tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
+        if not tag:
+            tag = Hashtag(
+                title=tag_name,
+                user_id=current_user.id
+            )
+            db.add(tag)
+        tags.append(tag)
+    db.commit()
+
     post = Post(
-        image_url=body.image_url,
-        title=body.title,
-        descr=body.descr,
+        image_url=url,
+        title=title,
+        descr=descr,
         hashtags=tags,
-        user=user,
+        user=current_user,
+        public_id=public_id,
         done=True
     )
     db.add(post)
     db.commit()
     db.refresh(post)
     return post
-
-
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
@@ -75,10 +111,11 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
     return post
 
 
-
 async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
     post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
     if post:
+        init_cloudinary()
+        cloudinary.uploader.destroy(post.public_id)
         db.delete(post)
         db.commit()
     return post
