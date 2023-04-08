@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from src.conf.messages import USER_NOT_ACTIVE
-from src.database.models import User, UserRoleEnum
+from src.database.models import User, UserRoleEnum, BlacklistToken
 from src.schemas import UserModel
 
 
@@ -56,17 +56,17 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
     db.commit()
 
 
-# async def confirmed_email(email: str, db: Session) -> None:
-#     """
-#     The confirmed_email function sets the confirmed field of a user to True.
+async def confirmed_email(email: str, db: Session) -> None:
+    """
+    The confirmed_email function sets the confirmed field of a user to True.
 
-#     :param email: str: Get the email of the user that is trying to confirm their account
-#     :param db: Session: Pass the database session to the function
-#     :return: None
-#     """
-#     user = await get_user_by_email(email, db)
-#     user.is_verify = True
-#     db.commit()
+    :param email: str: Get the email of the user that is trying to confirm their account
+    :param db: Session: Pass the database session to the function
+    :return: None
+    """
+    user = await get_user_by_email(email, db)
+    user.is_verify = True
+    db.commit()
 
 
 async def update_avatar(email: str, url: str, db: Session) -> User:
@@ -124,3 +124,9 @@ async def make_user_role(email: str, role: UserRoleEnum, db: Session) -> None:
     user.role = role
     db.commit()
 
+
+async def add_to_blacklist(token: str, db: Session) -> None:
+    blacklist_token = BlacklistToken(token=token, blacklisted_on=datetime.now())
+    db.add(blacklist_token)
+    db.commit()
+    db.refresh(blacklist_token)
