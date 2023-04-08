@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from src.database.models import Post, Hashtag, User # Rating, Comment
+from src.database.models import Post, Hashtag, User, Comment, Rating, UserRoleEnum
 from src.schemas import PostModel, PostUpdate
 
 
@@ -53,18 +53,10 @@ async def create_post(body: PostModel, user: User,  db: Session) -> Post:
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
-    post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
-    if post:
-        tags = []
-        for tag_name in body.hashtags:
-            tag = db.query(Hashtag).filter(Hashtag.title == tag_name).first()
-            if not tag:
-                tag = Hashtag(title=tag_name)
-                db.add(tag)
-            tags.append(tag)
-        db.commit()
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if user.role == UserRoleEnum.admin or post.user_id == user.id:
+        hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(body.hashtags))).all()
 
-        post.image_url = body.image_url
         post.title = body.title
         post.descr = body.descr
         post.hashtags = tags
@@ -77,8 +69,8 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
 
 
 async def remove_post(post_id: int, user: User, db: Session) -> Post | None:
-    post = db.query(Post).filter(and_(Post.user_id == user.id, Post.id == post_id)).first()
-    if post:
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if user.role == UserRoleEnum.admin or post.user_id == user.id:
         db.delete(post)
         db.commit()
     return post
@@ -91,9 +83,17 @@ async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> Post: #
 async def get_hashtags(post_id: int, db: Session) -> Hashtag: #
     return db.query(Hashtag).filter(and_(Hashtag.post == post_id)).all()
 
+async def get_my_posts(user: User, db: Session) -> List[Post]:
+    return db.query(Post).filter(Post.user_id==user.id).all()
 
 # шукати по всім юзерам, без прив'язки до поточного --------------------
-# def get_all_posts
+async def get_all_posts(skip: int, limit: int, user: User, db: Session) -> List[Post]:
+    if user.role == UserRoleEnum.admin:
+        return db.query(Post).offset(skip).limit(limit).all()
+    else:
+        return []
+
+
 async def get_posts_by_title(post_title: str, user: User, db: Session) -> List[Post]:
     return db.query(Post).filter(and_(Post.user_id == user.id, func.lower(Post.title).like(f'%{post_title.lower()}%'))).all()
 
@@ -103,8 +103,14 @@ async def get_posts_by_user_id(user_id: int, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user_id).all()
 
 
-async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: #
+async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: 
     return db.query(Post).filter(func.lower(Post.user.username).like(f'%{user_name.lower()}%')).all()
+
+async def get_all_commented_posts(user: User, db: Session):
+    return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()
+
+async def get_all_liked_posts(user: User, db: Session):
+    return db.query(Post).join(Rating).filter(Rating.user_id == user.id).all()
 # ----------------------------------------------------------------
 
 
