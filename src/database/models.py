@@ -99,3 +99,11 @@ class Rating(Base):
 
     user = relationship('User', backref="ratings")
     post = relationship('Post', backref="ratings")
+
+
+# Create Black list of access token
+class BlacklistToken(Base):
+    __tablename__ = 'blacklist_tokens'
+    id = Column(Integer, primary_key=True)
+    token = Column(String(500), unique=True, nullable=False)
+    blacklisted_on = Column(DateTime, nullable=False)
