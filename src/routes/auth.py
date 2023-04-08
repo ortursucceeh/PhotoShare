@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.database.models import User
 from src.services.email import send_email
 from src.database.connect_db import get_db
-from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail  # , RequestEmail
+from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.messages import (ALREADY_EXISTS, EMAIL_ALREADY_CONFIRMED, EMAIL_CONFIRMED,

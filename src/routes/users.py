@@ -13,20 +13,25 @@ from src.schemas import UserModel, UserResponse, RequestEmail, UserDb, RequestRo
 from src.conf.config import settings, init_cloudinary
 from src.services.auth import auth_service
 from src.services.roles import RoleChecker
-from src.conf.messages import USER_ROLE_EXIST, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
+from src.conf.messages import USER_ROLE_EXISTS, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
     USER_CHANGE_ROLE_TO
 
 router = APIRouter(prefix='/users', tags=["users"])
 
 allowed_get_user = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
 allowed_create_user = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
+allowed_get_all_users = RoleChecker([UserRoleEnum.admin])
 allowed_remove_user = RoleChecker([UserRoleEnum.admin])
+allowed_ban_user = RoleChecker([UserRoleEnum.admin])
+allowed_change_user_role = RoleChecker([UserRoleEnum.admin])
 
 
 @router.get("/me/", response_model=UserDb)
-async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
+async def read_my_profile(current_user: User = Depends(auth_service.get_current_user)):
     return current_user
 
+#edit_me
+#get_user_by_name(count_of_posts)
 
 @router.patch('/avatar', response_model=UserDb)
 async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
@@ -39,16 +44,14 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     return user
     
     
-@router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_user)])
-async def read_all_user(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
-                        current_user: User = Depends(auth_service.get_current_user)):
+@router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_all_users)])
+async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = await repository_users.get_users(skip, limit, db)
     return users
 
 
-@router.put("/ban/{email}", dependencies=[Depends(allowed_remove_user)])
-async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db),
-                            current_user: User = Depends(auth_service.get_current_user)):
+@router.patch("/ban/{email}", dependencies=[Depends(allowed_ban_user)])
+async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(body.email, db)
 
     if not user:
@@ -60,15 +63,13 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=USER_ALREADY_NOT_ACTIVE)
 
 
-@router.put("/make_role/{email}", dependencies=[Depends(allowed_remove_user)])
-async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db),
-                            current_user: User = Depends(auth_service.get_current_user)):
+@router.patch("/make_role/{email}", dependencies=[Depends(allowed_change_user_role)])
+async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(body.email, db)
-
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
     if body.role == user.role:
-        return {"msg": USER_ROLE_EXIST}
+        return {"msg": USER_ROLE_EXISTS}
     else:
         await repository_users.make_user_role(body.email, body.role, db)
         return {"msg": f"{USER_CHANGE_ROLE_TO} {body.role.value}"}
