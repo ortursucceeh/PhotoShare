@@ -59,7 +59,7 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
 
         post.title = body.title
         post.descr = body.descr
-        post.hashtags = tags
+        post.hashtags = hashtags
         post.updated_at = datetime.now()
         post.user = user
         post.done = True

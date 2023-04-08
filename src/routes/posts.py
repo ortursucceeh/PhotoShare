@@ -82,15 +82,13 @@ async def read_liked_posts(db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts
 
-@router.get("/posts/all", response_model=List[PostResponse], description=TOO_MANY_REQUESTS,
-             dependencies=[Depends(RateLimiter(times=10, seconds=60))])
+@router.get("/posts/all", response_model=List[PostResponse])
 async def read_all_posts(skip: int = 0, limit: int = 100,
             current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     posts = await repository_posts.get_all_posts(skip, limit, current_user, db)
     return posts
 
-@router.get("/posts/my", response_model=List[PostResponse], description=TOO_MANY_REQUESTS,
-             dependencies=[Depends(RateLimiter(times=10, seconds=60))])
+@router.get("/posts/my", response_model=List[PostResponse])
 async def read_my_posts(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     posts = await repository_posts.get_my_posts(current_user, db)
     return posts
