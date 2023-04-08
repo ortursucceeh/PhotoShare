@@ -1,16 +1,12 @@
-import cloudinary
-import cloudinary.uploader
-from faker import Faker
-from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File, Form, requests, Request
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File, Form, Request
 from typing import List
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from src.database.connect_db import get_db
-from src.database.models import User, Post, Hashtag
+from src.database.models import User
 from src.schemas import PostModel, PostResponse
 from src.repository import posts as repository_posts
 from src.services.auth import auth_service
-from src.conf.config import init_cloudinary
 from src.conf.messages import NOT_FOUND
 # from src.services.roles import RoleChecker
 
@@ -97,25 +93,7 @@ async def read_my_posts(current_user: User = Depends(auth_service.get_current_us
 @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
 async def create_post(request: Request, title: str = Form(None), descr: str = Form(None), hashtags: List = Form(None),
 file: UploadFile = File(None), db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
-    public_id = Faker().first_name()
-    init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
-    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
-        
-    hashtags = db.query(Hashtag).filter(and_(Hashtag.id.in_(hashtags))).all()
-    post = Post(
-        image_url=url,
-        title=title,
-        descr=descr,
-        hashtags=hashtags,
-        user=current_user,
-        public_id=public_id,
-        done=True
-    )
-    db.add(post)
-    db.commit()
-    db.refresh(post)
-    return post
+    return await repository_posts.create_post(request, title, descr, hashtags, file, db, current_user)
 
 
 @router.put("/{post_id}", response_model=PostResponse)

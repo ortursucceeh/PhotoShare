@@ -42,6 +42,7 @@ class HashtagBase(BaseModel):
     title: str = Field(max_length=50)
 
 
+
 class HashtagModel(HashtagBase):
     pass
 
