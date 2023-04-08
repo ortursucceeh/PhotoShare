@@ -139,9 +139,17 @@ async def make_user_role(email: str, role: UserRoleEnum, db: Session) -> None:
     user.role = role
     db.commit()
 
+async def find_blacklisted_token(token: str, db: Session) -> None:
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    return blacklist_token
+    
 
 async def add_to_blacklist(token: str, db: Session) -> None:
     blacklist_token = BlacklistToken(token=token, blacklisted_on=datetime.now())
     db.add(blacklist_token)
     db.commit()
     db.refresh(blacklist_token)
+    
+async def remove_from_blacklist(token: str, db: Session) -> None:
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    db.delete(blacklist_token)
