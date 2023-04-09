@@ -129,7 +129,7 @@ class PostResponse(PostBase):
     hashtags: List[HashtagResponse]
     created_at: datetime
     updated_at: datetime
-    avg_rating: float = 0.0
+    avg_rating: Optional[float] = 0.0
     
     class Config:
         orm_mode = True
