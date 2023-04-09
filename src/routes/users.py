@@ -5,9 +5,8 @@ from sqlalchemy.orm import Session
 
 from src.database.connect_db import get_db
 from src.repository import users as repository_users
-from src.repository import posts as repository_posts
 from src.database.models import User, UserRoleEnum
-from src.schemas import PostResponse, UserModel, UserResponse, RequestEmail, UserDb, RequestRole
+from src.schemas import PostResponse, UserProfileModel, RequestEmail, UserDb, RequestRole
 from src.services.auth import auth_service
 from src.services.roles import RoleChecker
 from src.conf.messages import NOT_FOUND, USER_ROLE_EXISTS, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
@@ -29,8 +28,7 @@ async def read_my_profile(current_user: User = Depends(auth_service.get_current_
 
 
 @router.put("/edit_me/", response_model=UserDb)
-async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(None),
-                          current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(None), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     updated_user = await repository_users.edit_my_profile(avatar, new_username, current_user, db)
     return updated_user
 
@@ -38,9 +36,20 @@ async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(
 @router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_all_users)])
 async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = await repository_users.get_users(skip, limit, db)
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return users
 
-#get_user_by_name(count_of_posts)
+
+@router.get("/user_with_username/{username}", response_model=UserProfileModel, dependencies=[Depends(allowed_get_all_users)])
+async def read_user_profile_by_username(username: str, db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
+    user_profile = await repository_users.get_user_profile(username, db)
+    if user_profile is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+    return user_profile
+
+
 @router.get("/commented_posts_by_me/", response_model=List[PostResponse])
 async def read_commented_posts_by_me(db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):

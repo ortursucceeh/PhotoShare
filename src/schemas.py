@@ -15,8 +15,19 @@ class UserModel(BaseModel):
 
 class UserUpdateModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
-
-
+    
+    
+class UserProfileModel(BaseModel):
+    username: str = Field(min_length=5, max_length=25)
+    email: EmailStr
+    avatar: Optional[str]
+    post_count: Optional[int]
+    comment_count: Optional[int]
+    rates_count: Optional[int]
+    is_active: Optional[bool]
+    created_at: datetime
+    
+    
 class UserDb(BaseModel):
     id: int
     username: str = Field(min_length=5, max_length=25)

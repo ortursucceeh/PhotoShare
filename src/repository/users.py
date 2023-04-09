@@ -6,18 +6,20 @@ import cloudinary.uploader
 from fastapi import HTTPException, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
-from src.conf.config import init_cloudinary
 
+from src.conf.config import init_cloudinary
 from src.conf.messages import USER_NOT_ACTIVE
 from src.database.models import User, UserRoleEnum, Comment, Rating, Post, BlacklistToken
-from src.schemas import UserModel
+from src.schemas import UserModel, UserProfileModel
 
 
 async def edit_my_profile(file, new_username, user: User, db: Session) -> User:
-    user.username = new_username
+    if new_username:
+        user.username = new_username
+        
     init_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{user.username}',
-                               overwrite=True)
+                               overwrite=True, invalidate=True)
     url = cloudinary.CloudinaryImage(f'Photoshare/{user.username}')\
                         .build_url(width=250, height=250, crop='fill')
     user.avatar = url
@@ -29,13 +31,24 @@ async def get_users(skip: int, limit: int, db: Session) -> List[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
 
-# @router.get("/by_username/{user_name}", response_model=List[PostResponse])
-# async def read_posts_by_username(user_name: str, db: Session = Depends(get_db),
-#             current_user: User = Depends(auth_service.get_current_user)):
-#     posts = await repository_posts.get_posts_by_username(user_name, db)
-#     if not posts:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
-#     return posts
+async def get_user_profile(username: str, db: Session) -> User:
+    user = db.query(User).filter(User.username == username).first()
+    if user:
+        post_count = db.query(Post).filter(Post.user_id == user.id).count()
+        comment_count = db.query(Comment).filter(Comment.user_id == user.id).count()
+        rates_count = db.query(Rating).filter(Rating.user_id == user.id).count()
+        user_profile = UserProfileModel(
+                username=user.username,
+                email=user.email,
+                avatar=user.avatar,
+                created_at=user.created_at, 
+                is_active=user.is_active,
+                post_count=post_count,
+                comment_count=comment_count,
+                rates_count=rates_count
+            )
+        return user_profile
+    return None
 
 async def get_all_commented_posts(user: User, db: Session):
     return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()

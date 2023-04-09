@@ -53,7 +53,6 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     # 
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
-    
     if not user.is_verify:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=EMAIL_NOT_CONFIRMED)
     # Check is_active

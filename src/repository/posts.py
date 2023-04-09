@@ -27,7 +27,7 @@ async def get_post_by_id(post_id: int, user: User, db: Session) -> Post:
 
 
 async def get_posts_by_title(post_title: str, user: User, db: Session) -> List[Post]:
-    return db.query(Post).filter(and_(func.lower(Post.title).like(f'%{post_title.lower()}%'))).all()
+    return db.query(Post).filter(func.lower(Post.title).like(f'%{post_title.lower()}%')).all()
 
 
 async def get_posts_by_user_id(user_id: int, db: Session) -> List[Post]:
