@@ -9,22 +9,6 @@ from src.repository.transform_post import transform_metod, show_qr
 from src.tramsform_schemas import TransformBodyModel
 
 
-# @pytest.fixture()
-# def token(client, user, session, monkeypatch):
-#     mock_send_email = MagicMock()
-#     monkeypatch.setattr("src.routes.auth.send_email", mock_send_email)
-#     client.post("/api/auth/signup", json=user)
-#     current_user: User = session.query(User).filter(User.email == user.get('email')).first()
-#     current_user.is_verify = True
-#     session.commit()
-#     response = client.post(
-#         "/api/auth/login",
-#         data={"username": user.get('email'), "password": user.get('password')},
-#     )
-#     data = response.json()
-#     return data["access_token"]
-
-
 @pytest.fixture()
 def new_user(user, session):
     new_user = session.query(User).filter(User.email == user.get('email')).first()
