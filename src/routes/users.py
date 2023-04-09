@@ -40,7 +40,7 @@ async def read_my_profile(current_user: User = Depends(auth_service.get_current_
 async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
                              db: Session = Depends(get_db)):
     init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{current_user.username}', overwrite=True)
+    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{current_user.username}', overwrite=True, invalidate=True)
     url = cloudinary.CloudinaryImage(f'Photoshare/{current_user.username}')\
                         .build_url(width=250, height=250, crop='fill')
     user = await repository_users.update_avatar(current_user.email, url, db)
