@@ -26,5 +26,10 @@ USER_ROLE_EXISTS = "Role is already exists"
 USER_CHANGE_ROLE_TO = "User role changed to"
 USER_IS_LOGOUT = "Successfully logged out!"
 TOO_MANY_HASHTAGS = "Too many hashtags! Maximum 5."
+NO_POST_ID = "No post with this ID."
+COMM_NOT_FOUND = "Comment not found or not available."
+NO_RATING = "Rating not found or not available."
+OWN_POST = "It`s not possible vote for own post."
+VOTE_TWICE = "It`s not possible to vote twice."
 
 

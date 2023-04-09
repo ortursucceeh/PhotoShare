@@ -5,12 +5,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, func
 from starlette import status
 
-from src.database.models import Rating, User, Post
-
+from src.database.models import Rating, User, Post, UserRoleEnum
+from src.conf import messages as message
 
 
 async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Rating:
-
     """
     The create_rate function creates a new rate for the post with the given id.
         Args:
@@ -27,9 +26,9 @@ async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Ratin
     already_voted = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user.id)).first()
     post_exists = db.query(Post).filter(Post.id == post_id).first()
     if is_self_post:
-        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible vote for own post.")
+        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail=message.OWN_POST)
     elif already_voted:
-        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to vote twice.")
+        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail=message.VOTE_TWICE)
     elif post_exists:
         new_rate = Rating(
             post_id=post_id,
@@ -44,8 +43,29 @@ async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Ratin
         return new_rate
 
 
-async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
+async def edit_rate(rate_id: int, new_rate: int, db: Session, user: User) -> Type[Rating] | None:
 
+    """
+    The edit_rate function allows the user to edit a rate.
+        Args:
+            rate_id (int): The id of the rate that will be edited.
+            new_rate (int): The new value for the rating.
+
+    :param rate_id: int: Get the rate id from the database
+    :param new_rate: int: Set the new rate value
+    :param db: Session: Access the database
+    :param user: User: Check if the user is an admin, moderator or the owner of the rate
+    :return: The edited rate object
+    """
+    rate = db.query(Rating).filter(Rating.id == rate_id).first()
+    if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or rate.user_id == user.id:
+        if rate:
+            rate.rate = new_rate
+            db.commit()
+    return rate
+
+
+async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
     """
     The delete_rate function deletes a rating from the database.
         Args:
@@ -78,6 +98,7 @@ async def show_ratings(db: Session, user: User) -> list[Type[Rating]]:
     all_ratings = db.query(Rating).all()
     return all_ratings
 
+
 async def show_my_ratings(db: Session, user: User) -> list[Type[Rating]]:
     """
     The show_ratings function returns a list of all ratings in the database.
@@ -91,7 +112,6 @@ async def show_my_ratings(db: Session, user: User) -> list[Type[Rating]]:
     """
     all_ratings = db.query(Rating).filter(Rating.user_id == user.id).all()
     return all_ratings
-
 
 
 async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) -> Type[Rating] | None:
@@ -110,4 +130,51 @@ async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) ->
     return user_p_rate
 
 
+async def commented_by_user_posts(user_id: int, db: Session, user: User) -> list[Type[Post]] | None:
 
+    """
+    The commented_by_user_posts function returns a list of posts that have been commented on by the user with the given id.
+        Args:
+            user_id (int): The id of the user whose comments we want to find.
+            db (Session): A database session object for querying and updating data in our database.
+
+    :param user_id: int: Identify the user
+    :param db: Session: Access the database
+    :param user: User: Get the user_id of the current logged in user
+    :return: All the posts commented by a user
+    """
+    rating_by_user = db.query(Post).filter(Rating.user_id == user_id).all()
+    return rating_by_user
+
+
+async def commented_by_me(db: Session, user: User) -> list[Type[Post]] | None:
+
+    """
+    The commented_by_me function returns a list of posts that the user has commented on.
+        Args:
+            db (Session): The database session object.
+            user (User): The User object to be queried for comments made by them.
+
+    :param db: Session: Connect to the database
+    :param user: User: Identify the user who is logged in
+    :return: A list of posts that have been commented by the user
+    """
+    rating_by_me = db.query(Post).filter(Rating.user_id == user.id).all()
+    return rating_by_me
+
+
+async def post_score(post_id: int, db: Session, user: User) -> float | None:
+
+    """
+    The post_score function takes in a post_id and returns the average rating of that post.
+        Args:
+            post_id (int): The id of the Post to be rated.
+
+    :param post_id: int: Identify the post that is being rated
+    :param db: Session: Access the database
+    :param user: User: Check if the user has already rated the post
+    :return: The average rating for a given post
+    """
+    total_post_rating = db.query(Post).filter(Post.id == post_id).first()
+
+    return total_post_rating.avg_rating
