@@ -1,13 +1,28 @@
 from datetime import datetime
 from typing import List
 
+import cloudinary
+import cloudinary.uploader
 from fastapi import HTTPException, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
+from src.conf.config import init_cloudinary
 
 from src.conf.messages import USER_NOT_ACTIVE
 from src.database.models import User, UserRoleEnum, Comment, Rating, Post, BlacklistToken
 from src.schemas import UserModel
+
+
+async def edit_my_profile(file, new_username, user: User, db: Session) -> User:
+    user.username = new_username
+    init_cloudinary()
+    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{user.username}',
+                               overwrite=True)
+    url = cloudinary.CloudinaryImage(f'Photoshare/{user.username}')\
+                        .build_url(width=250, height=250, crop='fill')
+    user.avatar = url
+    db.commit()
+    return user
 
 
 async def get_users(skip: int, limit: int, db: Session) -> List[User]:
@@ -25,9 +40,10 @@ async def get_users(skip: int, limit: int, db: Session) -> List[User]:
 async def get_all_commented_posts(user: User, db: Session):
     return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()
 
+
 async def get_all_liked_posts(user: User, db: Session):
-    #return db.query(Post).join(Rating).filter(and_(Rating.user_id == user.id, Post.user_id == user.id)).all()
     return db.query(Post).join(Rating).filter(Rating.user_id == user.id).all()
+
 
 async def get_user_by_email(email: str, db: Session) -> User:
     """
@@ -43,20 +59,16 @@ async def get_user_by_email(email: str, db: Session) -> User:
 async def create_user(body: UserModel, db: Session) -> User:
     """
     The create_user function creates a new user in the database.
-
-
     :param body: UserModel: Define the data that will be passed to the function
     :param db: Session: Pass in the database session
     :return: A user object
     """
     new_user = User(**body.dict())
-    if len(db.query(User).all()) == 0: # First user always admin
+    if len(db.query(User).all()) == 0: #  First user always admin
         new_user.role = UserRoleEnum.admin
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    
-
     return new_user
 
 
@@ -86,26 +98,6 @@ async def confirmed_email(email: str, db: Session) -> None:
     db.commit()
 
 
-async def update_avatar(email: str, url: str, db: Session) -> User:
-    """
-    The update_avatar function updates the avatar of a user.
-
-    Args:
-    email (str): The email address of the user to update.
-    url (str): The URL for the new avatar image.
-    db (Session, optional): A database session object to use instead of creating one locally. Defaults to None.  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQA: E501 line too long, but this is an example!  # noQ
-
-    :param email: Find the user in the database
-    :param url: str: Specify the type of data that is being passed into the function
-    :param db: Session: Pass the database session to the function
-    :return: The user object with the updated avatar url
-    """
-    user = await get_user_by_email(email, db)
-    user.avatar = url
-    db.commit()
-    return user
-
-
 async def ban_user(email: str, db: Session) -> None:
 
     """
@@ -116,7 +108,6 @@ async def ban_user(email: str, db: Session) -> None:
     :param email: str: Identify the user to be banned
     :param db: Session: Pass in the database session
     :return: None, because we don't need to return anything
-    :doc-author: Trelent
     """
     user = await get_user_by_email(email, db)
     user.is_active = False
@@ -135,22 +126,25 @@ async def make_user_role(email: str, role: UserRoleEnum, db: Session) -> None:
     :param role: UserRoleEnum: Set the role of the user
     :param db: Session: Pass the database session to the function
     :return: None
-    :doc-author: Trelent
     """
     user = await get_user_by_email(email, db)
     user.role = role
     db.commit()
 
-async def find_blacklisted_token(token: str, db: Session) -> None:
-    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
-    return blacklist_token
-    
+
+#### BLACKLIST #####
 
 async def add_to_blacklist(token: str, db: Session) -> None:
     blacklist_token = BlacklistToken(token=token, blacklisted_on=datetime.now())
     db.add(blacklist_token)
     db.commit()
     db.refresh(blacklist_token)
+    
+    
+async def find_blacklisted_token(token: str, db: Session) -> None:
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    return blacklist_token
+    
     
 async def remove_from_blacklist(token: str, db: Session) -> None:
     blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()

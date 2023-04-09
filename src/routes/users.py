@@ -1,17 +1,13 @@
 from typing import List
 
-import cloudinary
-import cloudinary.uploader
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
-
 
 from src.database.connect_db import get_db
 from src.repository import users as repository_users
 from src.repository import posts as repository_posts
 from src.database.models import User, UserRoleEnum
 from src.schemas import PostResponse, UserModel, UserResponse, RequestEmail, UserDb, RequestRole
-from src.conf.config import settings, init_cloudinary
 from src.services.auth import auth_service
 from src.services.roles import RoleChecker
 from src.conf.messages import NOT_FOUND, USER_ROLE_EXISTS, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
@@ -31,27 +27,20 @@ allowed_change_user_role = RoleChecker([UserRoleEnum.admin])
 async def read_my_profile(current_user: User = Depends(auth_service.get_current_user)):
     return current_user
 
-#edit_me
-#get_user_by_name(count_of_posts)
 
+@router.put("/edit_me/", response_model=UserDb)
+async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(None),
+                          current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+    updated_user = await repository_users.edit_my_profile(avatar, new_username, current_user, db)
+    return updated_user
 
-@router.patch('/avatar', response_model=UserDb)
-async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
-                             db: Session = Depends(get_db)):
-    init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{current_user.username}', overwrite=True)
-    url = cloudinary.CloudinaryImage(f'Photoshare/{current_user.username}')\
-                        .build_url(width=250, height=250, crop='fill')
-    user = await repository_users.update_avatar(current_user.email, url, db)
-    return user
-    
     
 @router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_all_users)])
 async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = await repository_users.get_users(skip, limit, db)
     return users
 
-
+#get_user_by_name(count_of_posts)
 @router.get("/commented_posts_by_me/", response_model=List[PostResponse])
 async def read_commented_posts_by_me(db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
