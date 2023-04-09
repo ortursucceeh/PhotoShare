@@ -29,7 +29,7 @@ def post_id(user, token, session):
     post = session.query(Post).first()
     if post is None:
         post = Post(
-            image_url="https://res.cloudinary.com/dybgf2pue/image/upload/v1681030932/Dominic.jpg",
+            image_url="https://res.cloudinary.com/dybgf2pue/image/upload/c_fill,h_250,w_250/Dominic",
             title="cat",
             descr="pet",
             created_at=datetime.now(),
