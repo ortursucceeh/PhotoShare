@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends, status, Request, Path
+from typing import List
 
+from fastapi import APIRouter, HTTPException, Depends, status, Request, Path
 from sqlalchemy.orm import Session
-from typing import List, Union
 
 from src.database.connect_db import get_db
 from src.schemas import RatingModel
@@ -14,9 +14,10 @@ router = APIRouter(prefix='/ratings', tags=["ratings"])
 
 # Role Checker-------------------------------------------------------------------------------------------
 
-allowed_get_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
+allowed_get_all_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder])
 allowed_create_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
-allowed_remove_ratings = RoleChecker([UserRoleEnum.admin])
+allowed_remove_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder])
+allowed_user_post_rate = RoleChecker([UserRoleEnum.admin])
 
 
 # Operational routs-------------------------------------------------------------------------------------------
@@ -43,8 +44,7 @@ async def create_rate(post_id: int, rate: int = Path(description="From one to fi
 
 @router.delete("/delete/{rate_id}", response_model=RatingModel, dependencies=[Depends(allowed_remove_ratings)])
 async def delete_rate(rate_id: int, db: Session = Depends(get_db),
-                      current_user: User = Depends(auth_service.get_current_user)
-                      ):
+                      current_user: User = Depends(auth_service.get_current_user)):
     """
     The delete_rate function deletes a rate from the database.
         The function takes in an integer, which is the id of the rate to be deleted.
@@ -62,7 +62,7 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     return deleted_rate
 
 
-@router.get("/all", response_model=List[RatingModel], dependencies=[Depends(allowed_get_ratings)])
+@router.get("/all", response_model=List[RatingModel], dependencies=[Depends(allowed_get_all_ratings)])
 async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     """
     The all_rates function returns all the ratings in the database.
@@ -77,12 +77,25 @@ async def all_rates(db: Session = Depends(get_db), current_user: User = Depends(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ratings doesn`t not found.")
     return comments
 
+@router.get("/all", response_model=List[RatingModel])
+async def all_my_rates(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
+    """
+    The all_rates function returns all the ratings in the database.
 
-@router.get("/user_post/{user_id}/{post_id}", response_model=RatingModel,
-            dependencies=[Depends(allowed_get_ratings)])
+
+    :param db: Session: Get the database connection
+    :param current_user: User: Get the current user from the database
+    :return: A list of all the ratings in the database
+    """
+    comments = await repository_ratings.show_my_ratings(db, current_user)
+    if comments is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ratings doesn`t not found.")
+    return comments
+
+
+@router.get("/user_post/{user_id}/{post_id}", response_model=RatingModel, dependencies=[Depends(allowed_user_post_rate)])
 async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_db),
-                         current_user: User = Depends(auth_service.get_current_user)
-                         ):
+                         current_user: User = Depends(auth_service.get_current_user)):
     """
     The user_rate_post function allows a user to rate a post.
         The function takes in the user_id and post_id as parameters, along with the database session and current user.
@@ -95,27 +108,6 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     :return: A rating object
     """
     rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
-    if rate is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found.")
-    return rate
-
-
-@router.get("/post/{post_id}", response_model=dict, dependencies=[Depends(allowed_get_ratings)])
-async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
-                      db: Session = Depends(get_db)
-                      ):
-    """
-    The post_rating function is used to rate a post.
-        The function takes in the post_id and current_user as parameters,
-        and returns the rating of that particular user on that particular post.
-
-    :param post_id: int: Identify the post that is being rated
-    :param current_user: User: Get the current user from the database
-    :param db: Session: Access the database
-    :return: A rating object
-    :doc-author: Trelent
-    """
-    rate = await repository_ratings.post_score(post_id, db, current_user)
     if rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found.")
     return rate

@@ -1,15 +1,12 @@
-from fastapi import HTTPException
+from typing import List, Type
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, func
-from typing import List, Type, Union
-
 from starlette import status
 
 from src.database.models import Rating, User, Post
 
-
-# from src.schemas import RatingModel, UserModel, UserDb
 
 
 async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Rating:
@@ -25,7 +22,6 @@ async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Ratin
     :param db: Session: Access the database
     :param user: User: Get the user_id of the logged in user
     :return: A rating object
-    :doc-author: Trelent
     """
     is_self_post = db.query(Post).filter(and_(Post.id == post_id, Post.user_id == user.id)).first()
     already_voted = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user.id)).first()
@@ -60,7 +56,6 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
     :param db: Session: Access the database
     :param user: User: Check if the user is logged in
     :return: The deleted rate
-    :doc-author: Trelent
     """
     rate = db.query(Rating).filter(Rating.id == rate_id).first()
     if rate:
@@ -79,10 +74,24 @@ async def show_ratings(db: Session, user: User) -> list[Type[Rating]]:
     :param db: Session: Access the database
     :param user: User: Get the user's id and pass it to the query
     :return: A list of rating objects
-    :doc-author: Trelent
     """
     all_ratings = db.query(Rating).all()
     return all_ratings
+
+async def show_my_ratings(db: Session, user: User) -> list[Type[Rating]]:
+    """
+    The show_ratings function returns a list of all ratings in the database.
+        Args:
+            db (Session): The database session to use for querying.
+            user (User): The user making the request.
+
+    :param db: Session: Access the database
+    :param user: User: Get the user's id and pass it to the query
+    :return: A list of rating objects
+    """
+    all_ratings = db.query(Rating).filter(Rating.user_id == user.id).all()
+    return all_ratings
+
 
 
 async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) -> Type[Rating] | None:
@@ -96,28 +105,9 @@ async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) ->
     :param db: Session: Access the database
     :param user: User: Check if the user is logged in or not
     :return: The rating of the user for a specific post
-    :doc-author: Trelent
     """
     user_p_rate = db.query(Rating).filter(and_(Rating.post_id == post_id, Rating.user_id == user_id)).first()
     return user_p_rate
 
-
-async def post_score(post_id: int, db: Session, user: User):
-    """
-    The post_score function takes in a post_id and returns the average rating of that post.
-        Args:
-            post_id (int): The id of the Post to be rated.
-            db (Session): A database session object used for querying data from the database.
-
-    :param post_id: int: Identify which post is being rated
-    :param db: Session: Access the database
-    :param user: User: Get the user id of the current logged in user
-    :return: The average rating of a post
-    :doc-author: Trelent
-    """
-    total_post_rating = db.query(func.avg(Rating.rate).label('average')).filter(Rating.post_id == post_id).first()
-    response = {"score": total_post_rating[0]}
-
-    return response
 
 
