@@ -97,7 +97,7 @@ class RatingModel(RatingBase):
 # Post
 class PostBase(BaseModel):
     image_url: str = Field(max_length=300, default=None)
-    transform_url: str = Field(max_length=900, default=None)
+    transform_url: str = Field(max_length=500, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: List[str] = []
