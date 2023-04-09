@@ -44,6 +44,9 @@ class HashtagBase(BaseModel):
 class HashtagModel(HashtagBase):
     pass
 
+    class Config:
+            orm_mode = True
+
 
 class HashtagResponse(HashtagBase):
     id: int
@@ -96,13 +99,12 @@ class RatingModel(RatingBase):
 
 # Post
 class PostBase(BaseModel):
+    id: int
     image_url: str = Field(max_length=300, default=None)
     transform_url: str = Field(max_length=300, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: List[str] = []
-
-    # rating: float = None
 
     @validator("hashtags")
     def validate_tags(cls, v):
@@ -121,15 +123,11 @@ class PostUpdate(BaseModel):
     hashtags: List[str] = []
     
 
-
-
-
 class PostResponse(PostBase):
-    id: int
-    hashtags: List[HashtagResponse]
+    hashtags: List[HashtagModel]
+    avg_rating: Optional[float] = 0.0
     created_at: datetime
     updated_at: datetime
-    avg_rating: Optional[float] = 0.0
     
     class Config:
         orm_mode = True

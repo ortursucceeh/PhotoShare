@@ -34,6 +34,11 @@ async def get_posts_by_user_id(user_id: int, db: Session) -> List[Post]:
     return db.query(Post).filter(Post.user_id == user_id).all()
 
 
+async def get_posts_by_username(user_name: str, db: Session) -> List[Post]: 
+    searched_user = db.query(User).filter(func.lower(User.username).like(f'%{user_name.lower()}%')).first()
+    return db.query(Post).filter(Post.user_id == searched_user.id).all()
+
+
 async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> List[Post]: 
     return db.query(Post).join(Post.tags).filter(Hashtag.title == hashtag_name).all()
 
