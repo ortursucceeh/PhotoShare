@@ -71,7 +71,7 @@ def body():
         "text": "Good"
     },
     "rotate": {
-        "use_filter": True,
+        "use_filter": False,
         "width": 400,
         "degree": 45
     }
@@ -81,7 +81,7 @@ def body():
 @pytest.mark.asyncio
 async def test_transform_metod(post, body, new_user, session):
     body = TransformBodyModel(**body)
-    url = "https://res.cloudinary.com/dybgf2pue/image/upload/c_thumb,g_face,h_400,w_400/r_max/c_crop,g_auto,h_400,w_400/c_scale,w_400/a_vflip/a_45/Dominic"
+    url = "https://res.cloudinary.com/dybgf2pue/image/upload/c_thumb,g_face,h_400,w_400/r_max/e_art:zorro/c_crop,g_auto,h_400,w_400/co_rgb:FFFF00,l_text:Times_70_bold:Good/fl_layer_apply,g_south,y_20/Dominic"
     response = await transform_metod(post.id, body, new_user, session)
     assert response.transform_url == url
 
@@ -89,4 +89,4 @@ async def test_transform_metod(post, body, new_user, session):
 @pytest.mark.asyncio
 async def test_show_qr(post, new_user, session):
     response = await show_qr(post.id, new_user, session)
-    assert type(response) == str
+    assert isinstance(response, str)
