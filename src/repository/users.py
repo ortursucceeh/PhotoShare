@@ -3,8 +3,7 @@ from typing import List
 
 import cloudinary
 import cloudinary.uploader
-from fastapi import HTTPException, status
-from sqlalchemy import and_
+from sqlalchemy import  func
 from sqlalchemy.orm import Session
 
 from src.conf.config import init_cloudinary
@@ -30,6 +29,10 @@ async def edit_my_profile(file, new_username, user: User, db: Session) -> User:
 async def get_users(skip: int, limit: int, db: Session) -> List[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
+async def get_users_with_username(username: str, db: Session) -> List[User]:
+    return db.query(User).filter(func.lower(User.username).like(f'%{username.lower()}%')).all()
+
+
 
 async def get_user_profile(username: str, db: Session) -> User:
     user = db.query(User).filter(User.username == username).first()
@@ -49,6 +52,7 @@ async def get_user_profile(username: str, db: Session) -> User:
             )
         return user_profile
     return None
+
 
 async def get_all_commented_posts(user: User, db: Session):
     return db.query(Post).join(Comment).filter(Comment.user_id == user.id).all()

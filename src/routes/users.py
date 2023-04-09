@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.database.connect_db import get_db
 from src.repository import users as repository_users
 from src.database.models import User, UserRoleEnum
-from src.schemas import PostResponse, UserProfileModel, RequestEmail, UserDb, RequestRole
+from src.schemas import PostResponse, UserProfileModel, UserResponseModel, RequestEmail, UserDb, RequestRole
 from src.services.auth import auth_service
 from src.services.roles import RoleChecker
 from src.conf.messages import NOT_FOUND, USER_ROLE_EXISTS, INVALID_EMAIL, USER_NOT_ACTIVE, USER_ALREADY_NOT_ACTIVE,\
@@ -40,8 +40,15 @@ async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(g
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return users
 
+@router.get("/users_with_username/{username}", response_model=List[UserResponseModel], dependencies=[Depends(allowed_get_all_users)])
+async def read_users_by_username(username: str, db: Session = Depends(get_db),
+            current_user: User = Depends(auth_service.get_current_user)):
+    users = await repository_users.get_users_with_username(username, db)
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+    return users
 
-@router.get("/user_with_username/{username}", response_model=UserProfileModel, dependencies=[Depends(allowed_get_all_users)])
+@router.get("/user_profile_with_username/{username}", response_model=UserProfileModel, dependencies=[Depends(allowed_get_all_users)])
 async def read_user_profile_by_username(username: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
     user_profile = await repository_users.get_user_profile(username, db)

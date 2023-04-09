@@ -9,7 +9,7 @@ from src.database.models import UserRoleEnum
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
     email: EmailStr
-    password: str = Field(min_length=6, max_length=25)
+    password: str = Field(min_length=6, max_length=30)
     avatar: Optional[str]
 
 
@@ -17,8 +17,18 @@ class UserUpdateModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
     
     
+class UserResponseModel(BaseModel):
+    id: int
+    username: str
+    email: str
+    is_active: Optional[bool]
+    created_at: datetime
+    
+    class Config:
+        orm_mode = True
+    
 class UserProfileModel(BaseModel):
-    username: str = Field(min_length=5, max_length=25)
+    username: str 
     email: EmailStr
     avatar: Optional[str]
     post_count: Optional[int]
@@ -30,7 +40,7 @@ class UserProfileModel(BaseModel):
     
 class UserDb(BaseModel):
     id: int
-    username: str = Field(min_length=5, max_length=25)
+    username: str
     email: str
     avatar: Optional[str]
     role: UserRoleEnum
@@ -71,7 +81,6 @@ class HashtagResponse(HashtagBase):
         orm_mode = True
 
 
-# Comments
 class CommentBase(BaseModel):
     text: str = Field(max_length=500)
 
@@ -96,7 +105,6 @@ class CommentUpdate(CommentModel):
         orm_mode = True
 
 
-# Rating
 class RatingBase(BaseModel):
     rate: int
 
@@ -111,7 +119,6 @@ class RatingModel(RatingBase):
         orm_mode = True
 
 
-# Post
 class PostBase(BaseModel):
     id: int
     image_url: str = Field(max_length=300, default=None)
