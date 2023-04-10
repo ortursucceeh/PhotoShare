@@ -45,36 +45,36 @@ def post(new_user, session):
 
 @pytest.fixture()
 def body():
-    return{
-    "circle": {
-        "use_filter": True,
-        "height": 400,
-        "width": 400
-    },
-    "effect": {
-        "use_filter": True,
-        "art_audrey": False,
-        "art_zorro": True,
-        "cartoonify": False,
-        "blur": False
-    },
-    "resize": {
-        "use_filter": True,
-        "crop": True,
-        "fill": False,
-        "height": 400,
-        "width": 400
-    },
-    "text": {
-        "use_filter": True,
-        "font_size": 70,
-        "text": "Good"
-    },
-    "rotate": {
-        "use_filter": False,
-        "width": 400,
-        "degree": 45
-    }
+    return {
+        "circle": {
+            "use_filter": True,
+            "height": 400,
+            "width": 400
+        },
+        "effect": {
+            "use_filter": True,
+            "art_audrey": False,
+            "art_zorro": True,
+            "cartoonify": False,
+            "blur": False
+        },
+        "resize": {
+            "use_filter": True,
+            "crop": True,
+            "fill": False,
+            "height": 400,
+            "width": 400
+        },
+        "text": {
+            "use_filter": True,
+            "font_size": 70,
+            "text": "Good"
+        },
+        "rotate": {
+            "use_filter": False,
+            "width": 400,
+            "degree": 45
+        }
     }
 
 

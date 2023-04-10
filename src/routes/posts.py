@@ -32,6 +32,7 @@ async def read_all_user_posts(skip: int = 0, limit: int = 100, current_user: Use
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts
 
+
 @router.get("/all", response_model=List[PostResponse], dependencies=[Depends(allowed_get_all_posts)])
 async def read_all_posts(skip: int = 0, limit: int = 100,
             current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
@@ -39,6 +40,7 @@ async def read_all_posts(skip: int = 0, limit: int = 100,
     if posts is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts
+
 
 @router.get("/by_id/{post_id}", response_model=PostResponse)
 async def read_post_by_id(post_id: int, db: Session = Depends(get_db),

@@ -31,5 +31,5 @@ COMM_NOT_FOUND = "Comment not found or not available."
 NO_RATING = "Rating not found or not available."
 OWN_POST = "It`s not possible vote for own post."
 VOTE_TWICE = "It`s not possible to vote twice."
-
+OPERATION_FORBIDDEN = "Operation forbidden"
 

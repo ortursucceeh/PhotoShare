@@ -28,7 +28,13 @@ faker = "^18.4.0"
 django-qrcode = "^0.3"
 qrcode = "^7.4.2"
 pyqrcode = "^1.2.1"
+pillow = "^9.5.0"
+pytest-asyncio = "^0.21.0"
 
+
+[tool.poetry.group.test.dependencies]
+httpx = "^0.23.3"
+pytest-cov = "^4.0.0"
 
 [build-system]
 requires = ["poetry-core"]
