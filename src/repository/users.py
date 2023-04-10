@@ -12,18 +12,25 @@ from src.database.models import User, UserRoleEnum, Comment, Rating, Post, Black
 from src.schemas import UserModel, UserProfileModel
 
 
+async def get_me(user: User, db: Session) -> User:
+    user = db.query(User).filter(User.id == user.id).first()
+    return user
+
+
 async def edit_my_profile(file, new_username, user: User, db: Session) -> User:
+    me = db.query(User).filter(User.id == user.id).first()
     if new_username:
-        user.username = new_username
+        me.username = new_username
         
     init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{user.username}',
+    cloudinary.uploader.upload(file.file, public_id=f'Photoshare/{me.username}',
                                overwrite=True, invalidate=True)
-    url = cloudinary.CloudinaryImage(f'Photoshare/{user.username}')\
+    url = cloudinary.CloudinaryImage(f'Photoshare/{me.username}')\
                         .build_url(width=250, height=250, crop='fill')
-    user.avatar = url
+    me.avatar = url
     db.commit()
-    return user
+    db.refresh(me)
+    return me
 
 
 async def get_users(skip: int, limit: int, db: Session) -> List[User]:
