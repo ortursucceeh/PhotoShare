@@ -44,7 +44,6 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
     :param db: Session: Connect to the database
     :param user: User: Check if the user is an admin, moderator or the author of the comment
     :return: A comment object
-    :doc-author: Trelent
     """
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
     if comment:
@@ -119,6 +118,5 @@ async def show_user_post_comments(user_id: int, post_id: int, db: Session) -> Li
     :param post_id: int: Filter the comments by post_id
     :param db: Session: Pass the database session to the function
     :return: A list of comments, or none if the user doesn't exist
-
     """
     return db.query(Comment).filter(and_(Comment.post_id == post_id, Comment.user_id == user_id)).all()
