@@ -68,7 +68,8 @@ async def create_post(request: Request, title: str, descr: str, hashtags: List, 
     init_cloudinary()
     cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
     url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
-    hashtagss = get_hashtags(hashtags[0].split(","), current_user, db)
+    if hashtags:
+        hashtags = get_hashtags(hashtags[0].split(","), current_user, db)
     
     post = Post(
         image_url = url,
@@ -76,7 +77,7 @@ async def create_post(request: Request, title: str, descr: str, hashtags: List, 
         descr = descr,
         created_at = datetime.now(),
         user_id = current_user.id,
-        hashtags = hashtagss,
+        hashtags = hashtags,
         public_id = public_id,
         done=True
     )
@@ -91,7 +92,9 @@ async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -
     
     if post:
         if user.role == UserRoleEnum.admin or post.user_id == user.id:
-            hashtags = get_hashtags(body.hashtags, user, db)
+            hashtags = []
+            if body.hashtags:
+                hashtags = get_hashtags(body.hashtags, user, db)
 
             post.title = body.title
             post.descr = body.descr
