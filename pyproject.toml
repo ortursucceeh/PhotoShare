@@ -28,6 +28,7 @@ faker = "^18.4.0"
 django-qrcode = "^0.3"
 qrcode = "^7.4.2"
 pyqrcode = "^1.2.1"
+pillow = "^9.5.0"
 
 
 [tool.poetry.group.test.dependencies]
