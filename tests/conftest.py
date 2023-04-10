@@ -1,12 +1,13 @@
 import sys
 import os
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from main import app
-from src.database.models import Base, UserRoleEnum
+from src.database.models import Base
 from src.database.connect_db import get_db
 
 sys.path.append(os.getcwd())
@@ -30,7 +31,6 @@ def session():
     is also scoped so that multiple tests can use it if they wish.
 
     :return: A function that returns a session
-    :doc-author: Trelent
     """
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -54,7 +54,6 @@ def client(session):
 
     :param session: Pass the test client a session object
     :return: A test client
-    :doc-author: Trelent
     """
     def override_get_db():
         try:
@@ -75,7 +74,6 @@ def user():
     username, email, password, role and avatar.
 
     :return: A dictionary with the user's details
-    :doc-author: Trelent
     """
     return {
         "id": 10,
