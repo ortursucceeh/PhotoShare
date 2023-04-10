@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from PIL import Image
-from src.database.models import Hashtag, User
-from src.conf.messages import ALREADY_EXISTS, EMAIL_NOT_CONFIRMED, INVALID_PASSWORD, INVALID_EMAIL, NOT_FOUND, OPERATION_FORBIDDEN, USER_ALREADY_NOT_ACTIVE, USER_CHANGE_ROLE_TO, USER_NOT_ACTIVE, USER_ROLE_EXISTS
+from src.database.models import User
+from src.conf.messages import INVALID_EMAIL, NOT_FOUND, OPERATION_FORBIDDEN, USER_ALREADY_NOT_ACTIVE, USER_CHANGE_ROLE_TO, USER_ROLE_EXISTS
 from src.services.auth import auth_service
 
 sys.path.append(os.getcwd())
@@ -118,6 +118,7 @@ def test_read_users_with_username_not_found(client, token):
         data = response.json()
         assert data["detail"] == NOT_FOUND
         
+        
 def test_read_user_profile_with_username(client, token):
     with patch.object(auth_service, 'redis_cache') as r_mock:
         r_mock.get.return_value = None
@@ -131,6 +132,7 @@ def test_read_user_profile_with_username(client, token):
         assert data["email"] == "artur4ik@example.com"
         assert data["post_count"] == 0
         assert data["comment_count"] == 0
+        
         
 def test_read_user_profile_with_username_not_found(client, token):
     with patch.object(auth_service, 'redis_cache') as r_mock:
@@ -210,6 +212,7 @@ def test_ban_user_by_email_invalid(client, token):
         assert response.status_code == 401, response.text
         data = response.json()
         assert data["detail"] == INVALID_EMAIL
+
 
 def test_ban_user_by_email_already_banned(client, token):
     with patch.object(auth_service, 'redis_cache') as r_mock:
