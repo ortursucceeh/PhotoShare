@@ -62,6 +62,17 @@ def get_hashtags(hashtag_titles: list, user: User, db: Session):
         tags.append(tag)
     return tags
 
+async def searcher(keyword: str, db: Session):
+    post_list = []
+    posts_all = db.query(Post).all()
+    for post in posts_all:
+        if keyword.capitalize() in post.title.capitalize() and post not in post_list:
+            post_list.append(post)
+        if keyword.capitalize() in post.descr.capitalize() and post not in post_list:
+            post_list.append(post)
+        if keyword.capitalize() in post.hashtags.capitalize() and post not in post_list:
+            post_list.append(post)
+    return post_list
 
 async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
     public_id = Faker().first_name()
