@@ -46,42 +46,42 @@ def post(new_user, session):
 @pytest.fixture()
 def body():
     return{
-    "circle": {
-        "use_filter": True,
-        "height": 400,
-        "width": 400
-    },
-    "effect": {
-        "use_filter": True,
-        "art_audrey": False,
-        "art_zorro": True,
-        "cartoonify": False,
-        "blur": False
-    },
-    "resize": {
-        "use_filter": True,
-        "crop": True,
-        "fill": False,
-        "height": 400,
-        "width": 400
-    },
-    "text": {
-        "use_filter": True,
-        "font_size": 70,
-        "text": "Good"
-    },
-    "rotate": {
-        "use_filter": False,
-        "width": 400,
-        "degree": 45
-    }
-    }
+  "circle": {
+    "use_filter": True,
+    "height": 400,
+    "width": 400
+  },
+  "effect": {
+    "use_filter": True,
+    "art_audrey": True,
+    "art_zorro": False,
+    "cartoonify": False,
+    "blur": False
+  },
+  "resize": {
+    "use_filter": True,
+    "crop": False,
+    "fill": True,
+    "height": 400,
+    "width": 400
+  },
+  "text": {
+    "use_filter": True,
+    "font_size": 70,
+    "text": "oooohhh"
+  },
+  "rotate": {
+    "use_filter": True,
+    "width": 400,
+    "degree": 45
+  }
+}
 
 
 @pytest.mark.asyncio
 async def test_transform_metod(post, body, new_user, session):
     body = TransformBodyModel(**body)
-    part_url = "/image/upload/c_thumb,g_face,h_400,w_400/r_max/e_art:zorro/c_crop,g_auto,h_400,w_400/co_rgb:FFFF00,l_text:Times_70_bold:Good/fl_layer_apply,g_south,y_20/Dominic"
+    part_url = "image/upload/c_thumb,g_face,h_400,w_400/r_max/e_art:audrey/c_fill,g_auto,h_400,w_400/co_rgb:FFFF00,l_text:Times_70_bold:oooohhh/fl_layer_apply,g_south,y_20/c_scale,w_400/a_vflip/a_45/Dominic"
     response = await transform_metod(post.id, body, new_user, session)
     assert part_url in response.transform_url 
 

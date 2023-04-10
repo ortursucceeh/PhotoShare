@@ -80,17 +80,21 @@ def body():
 
 
 def test_transform_metod(client, post_id, body, token):
-    response = client.patch(f'/api/transformations/{post_id}', json=body,
-                           headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert data.get('transform_url') is not None
+    with patch.object(auth_service, 'redis_cache') as r_mock:
+        r_mock.get.return_value = None
+        response = client.patch(f'/api/transformations/{post_id}', json=body,
+                            headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data.get('transform_url') is not None
 
 
 def test_show_qr(client, post_id, user, token):
-    response = client.post(f'/api/transformations/qr/{post_id}', json=user,
-                           headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert isinstance(data, str)
+    with patch.object(auth_service, 'redis_cache') as r_mock:
+        r_mock.get.return_value = None
+        response = client.post(f'/api/transformations/qr/{post_id}', json=user,
+                            headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert isinstance(data, str)
     
