@@ -78,6 +78,7 @@ def user():
     :doc-author: Trelent
     """
     return {
+        "id": 4,
         "username": "deadpool",
         "email": "deadpool@example.com",
         "password": "123456789",

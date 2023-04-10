@@ -70,14 +70,14 @@ async def create_post(request: Request, title: str, descr: str, hashtags: List, 
     url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
     hashtagss = get_hashtags(hashtags[0].split(","), current_user, db)
     
-
     post = Post(
-        image_url=url,
-        title=title,
-        descr=descr,
-        hashtags=hashtagss,
-        user=current_user,
-        public_id=public_id,
+        image_url = url,
+        title = title,
+        descr = descr,
+        created_at = datetime.now(),
+        user_id = current_user.id,
+        hashtags = hashtagss,
+        public_id = public_id,
         done=True
     )
     db.add(post)

@@ -1,14 +1,5 @@
 import cloudinary
-import qrcode
 from pydantic import BaseSettings
-
-
-qr = qrcode.QRCode(
-    version=1,
-    error_correction=qrcode.constants.ERROR_CORRECT_L,
-    box_size=10,
-    border=4,
-)
 
 
 def init_cloudinary():
