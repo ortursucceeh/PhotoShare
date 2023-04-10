@@ -9,6 +9,25 @@ packages = [{include = "photoshare_project"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.95.0"
+uvicorn = {extras = ["standard"], version = "^0.21.1"}
+sqlalchemy = "^2.0.7"
+psycopg2 = "^2.9.5"
+python-dotenv = "^1.0.0"
+alembic = "^1.10.2"
+pydantic = {extras = ["dotenv"], version = "^1.10.7"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+redis = "^4.5.4"
+fastapi-limiter = "^0.1.5"
+cloudinary = "^1.32.0"
+fastapi-mail = "^1.2.6"
+sqlalchemy-utils = "^0.40.0"
+pytest = "^7.2.2"
+faker = "^18.4.0"
+django-qrcode = "^0.3"
+qrcode = "^7.4.2"
+pyqrcode = "^1.2.1"
 
 
 [build-system]
