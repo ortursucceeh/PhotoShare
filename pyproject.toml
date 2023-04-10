@@ -30,6 +30,10 @@ qrcode = "^7.4.2"
 pyqrcode = "^1.2.1"
 
 
+[tool.poetry.group.test.dependencies]
+httpx = "^0.23.3"
+pytest-cov = "^4.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

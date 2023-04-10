@@ -47,8 +47,8 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
     :doc-author: Trelent
     """
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
-    if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or comment.user_id == user.id:
-        if comment:
+    if comment:
+        if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or comment.user_id == user.id:
             comment.text = body.text
             comment.updated_at = func.now()
             comment.update_status = True

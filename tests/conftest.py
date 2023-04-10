@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from main import app
-from src.database.models import Base
+from src.database.models import Base, UserRoleEnum
 from src.database.connect_db import get_db
 
 sys.path.append(os.getcwd())
@@ -78,10 +78,10 @@ def user():
     :doc-author: Trelent
     """
     return {
-        "id": 4,
-        "username": "deadpool",
-        "email": "deadpool@example.com",
+        "id": 10,
+        "username": "artur4ik",
+        "email": "artur4ik@example.com",
         "password": "123456789",
-        'role': 'User',
-        'avatar': 'URL-avatar'
+        "role": "Administrator",
+        "avatar": "url-avatar"
         }
