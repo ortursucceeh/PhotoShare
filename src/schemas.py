@@ -9,13 +9,38 @@ from src.database.models import UserRoleEnum
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=25)
     email: EmailStr
-    password: str = Field(min_length=6, max_length=25)
+    password: str = Field(min_length=6, max_length=30)
     avatar: Optional[str]
 
 
+class UserUpdateModel(BaseModel):
+    username: str = Field(min_length=5, max_length=25)
+    
+    
+class UserResponseModel(BaseModel):
+    id: int
+    username: str
+    email: str
+    is_active: Optional[bool]
+    created_at: datetime
+    
+    class Config:
+        orm_mode = True
+    
+class UserProfileModel(BaseModel):
+    username: str 
+    email: EmailStr
+    avatar: Optional[str]
+    post_count: Optional[int]
+    comment_count: Optional[int]
+    rates_count: Optional[int]
+    is_active: Optional[bool]
+    created_at: datetime
+    
+    
 class UserDb(BaseModel):
     id: int
-    username: str = Field(min_length=5, max_length=25)
+    username: str
     email: str
     avatar: Optional[str]
     role: UserRoleEnum
@@ -29,20 +54,22 @@ class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
     
+    
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
 
 
-# Hashtag
 class HashtagBase(BaseModel):
     title: str = Field(max_length=50)
 
 
-
 class HashtagModel(HashtagBase):
     pass
+
+    class Config:
+            orm_mode = True
 
 
 class HashtagResponse(HashtagBase):
@@ -54,7 +81,6 @@ class HashtagResponse(HashtagBase):
         orm_mode = True
 
 
-# Comments
 class CommentBase(BaseModel):
     text: str = Field(max_length=500)
 
@@ -79,7 +105,6 @@ class CommentUpdate(CommentModel):
         orm_mode = True
 
 
-# Rating
 class RatingBase(BaseModel):
     rate: int
 
@@ -94,15 +119,13 @@ class RatingModel(RatingBase):
         orm_mode = True
 
 
-# Post
 class PostBase(BaseModel):
+    id: int
     image_url: str = Field(max_length=300, default=None)
     transform_url: str = Field(max_length=500, default=None)
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
     hashtags: List[str] = []
-
-    # rating: float = None
 
     @validator("hashtags")
     def validate_tags(cls, v):
@@ -121,12 +144,9 @@ class PostUpdate(BaseModel):
     hashtags: List[str] = []
     
 
-
-
-
 class PostResponse(PostBase):
-    id: int
-    hashtags: List[HashtagResponse]
+    hashtags: List[HashtagModel]
+    avg_rating: Optional[float] = 0.0
     created_at: datetime
     updated_at: datetime
     

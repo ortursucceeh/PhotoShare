@@ -1,7 +1,6 @@
 import enum
 
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Numeric, String, Table, Text, func
-# from sqlalchemy.sql.sqltypes import Date
+from sqlalchemy import Boolean, Column, DateTime,ForeignKey, Integer, Numeric, String, Table, Text, func
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import aggregated
@@ -33,9 +32,9 @@ class User(Base):
 post_m2m_hashtag = Table(
     "post_m2m_hashtag",
     Base.metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True, default=1),
-    Column("post_id", Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True),
-    Column("hashtag_id", Integer, ForeignKey("hashtags.id", ondelete="CASCADE"), primary_key=True),
+    Column("id", Integer, primary_key=True),
+    Column("post_id", Integer, ForeignKey("posts.id", ondelete="CASCADE")),
+    Column("hashtag_id", Integer, ForeignKey("hashtags.id", ondelete="CASCADE")),
 )
 
 
@@ -48,18 +47,16 @@ class Post(Base):
     descr = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
-    done = Column(Boolean, default=False)  # for update
+    done = Column(Boolean, default=False)
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
     public_id = Column(String(50))
 
-    #-------------Ratings block----------------------------------
     @aggregated('rating', Column(Numeric))
     def avg_rating(self):
        return func.avg(Rating.rate)
     
     rating = relationship('Rating')
-    #-----------------------------------------------------------
     user = relationship('User', backref="posts")
 
 
@@ -95,7 +92,6 @@ class Rating(Base):
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
 
     user = relationship('User', backref="ratings")
-    post = relationship('Post', backref="ratings")
 
 
 # Create Black list of access token

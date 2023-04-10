@@ -8,6 +8,7 @@ from src.database.connect_db import get_db
 from src.schemas import CommentBase, CommentUpdate, CommentModel
 from src.repository import comments as repository_comments
 from src.services.auth import auth_service
+from src.conf import messages as message
 
 from src.services.roles import RoleChecker
 from src.database.models import User, UserRoleEnum
@@ -35,7 +36,7 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session = Depends
                        current_user: User = Depends(auth_service.get_current_user)):
     edited_comment = await repository_comments.edit_comment(comment_id, body, db, current_user)
     if edited_comment is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found or not available.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.COMM_NOT_FOUND)
     return edited_comment
 
 
@@ -44,7 +45,7 @@ async def delete_comment(comment_id: int, db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
     deleted_comment = await repository_comments.delete_comment(comment_id, db, current_user)
     if deleted_comment is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found or not available.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.COMM_NOT_FOUND)
     return deleted_comment
 
 
@@ -53,7 +54,7 @@ async def single_comment(comment_id: int, db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
     comment = await repository_comments.show_single_comment(comment_id, db, current_user)
     if comment is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exact comment not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.COMM_NOT_FOUND)
     return comment
 
 
@@ -62,7 +63,7 @@ async def by_user_comments(user_id: int, db: Session = Depends(get_db),
                            current_user: User = Depends(auth_service.get_current_user)):
     comments = await repository_comments.show_user_comments(user_id, db)
     if comments is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comments or author does not exist.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.COMM_NOT_FOUND)
     return comments
 
 
@@ -72,5 +73,5 @@ async def by_user_post_comments(user_id: int, post_id: int, db: Session = Depend
                                 current_user: User = Depends(auth_service.get_current_user)):
     comments = await repository_comments.show_user_post_comments(user_id, post_id, db)
     if comments is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comments or user not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.COMM_NOT_FOUND)
     return comments
