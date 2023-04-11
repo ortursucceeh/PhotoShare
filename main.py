@@ -1,5 +1,7 @@
+import redis.asyncio as redis
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi_limiter import FastAPILimiter
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
@@ -11,14 +13,27 @@ from src.routes.ratings import router as rating_router
 from src.routes.transform_post import router as trans_router
 from src.routes.hashtags import router as hashtag_router
 from src.routes.users import router as users_router
-
+from src.conf.config import settings
 
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/", name="Project root")
 def read_root():
     return {"message": "Hello PhotoShare"}
+
+
+@app.on_event("startup")
+async def startup():
+    redis_cache = await redis.Redis(
+        host=settings.redis_host,
+        port=settings.redis_port,
+        password=settings.redis_password,
+        db=0,
+        encoding="utf-8",
+        decode_responses=True
+    )
+    await FastAPILimiter.init(redis_cache)
 
 
 @app.get("/api/healthchecker")

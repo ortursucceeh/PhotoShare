@@ -1,14 +1,5 @@
 import cloudinary
-import qrcode
 from pydantic import BaseSettings
-
-
-qr = qrcode.QRCode(
-    version=1,
-    error_correction=qrcode.constants.ERROR_CORRECT_L,
-    box_size=10,
-    border=4,
-)
 
 
 def init_cloudinary():
@@ -21,8 +12,7 @@ def init_cloudinary():
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = 'postgresql+psycopg2://ccawclzf:zZdgjAxqRfB3-Nc9DFCqlyyv1WvZqjVK@snuffleupagus.db.elephantsql.com:5432/ccawclzf'
-    # sqlalchemy_database_url: str = 'postgresql+psycopg2://user:password@localhost:5432/postgres'
+    sqlalchemy_database_url: str = 'postgresql+psycopg2://user:password@localhost:5432/postgres'
     secret_key: str = 'secret_key'
     algorithm: str = 'HS256'
     mail_username: str = "example@meta.ua"
@@ -32,6 +22,7 @@ class Settings(BaseSettings):
     mail_server: str = "smtp.meta.ua"
     redis_host: str = "localhost"
     redis_port: int = 6379
+    redis_password: str = "secretPassword"
     cloudinary_name: str = 'name'
     cloudinary_api_key: str = '5555555555555555'
     cloudinary_api_secret: str = 'secret'
