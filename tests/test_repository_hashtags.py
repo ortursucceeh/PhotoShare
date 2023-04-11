@@ -42,15 +42,15 @@ def tag(user, session):
 
 @pytest.fixture()
 def body():
-    return{
-  "title": "string"
+    return {
+        "title": "string"
     }
 
 
 @pytest.fixture()
 def new_body():
-    return{
-  "title": "dog"
+    return {
+        "title": "dog"
     }
 
 
