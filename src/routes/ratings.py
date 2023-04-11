@@ -10,6 +10,7 @@ from src.services.auth import auth_service
 from src.services.roles import RoleChecker
 from src.database.models import User, UserRoleEnum
 from src.conf import messages as message
+from src.conf.messages import NOT_FOUND
 
 router = APIRouter(prefix='/ratings', tags=["ratings"])
 
@@ -136,26 +137,5 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     """
     rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
     if rate is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found.")
-    return rate
-
-
-@router.get("/post/{post_id}", response_model=float | None, dependencies=[Depends(allowed_commented_by_user)])
-async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
-                      db: Session = Depends(get_db)
-                      ):
-
-    """
-    The post_rating function is used to rate a post.
-        The function takes in the post_id and current_user as parameters,
-        and returns the rating of that particular user on that particular post.
-
-    :param post_id: int: Get the post id from the url
-    :param current_user: User: Get the user who is currently logged in
-    :param db: Session: Get the database session
-    :return: A rating object
-    """
-    rate = await repository_ratings.post_score(post_id, db, current_user)
-    if rate is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return rate
