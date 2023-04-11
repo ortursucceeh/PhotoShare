@@ -49,8 +49,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     :return: A dict with the access_token, refresh_token and token type
     """
     user = await repository_users.get_user_by_email(body.username, db)
-    # token = credentials.credentials
-    # 
+
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
     if not user.is_verify:
@@ -83,8 +82,7 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(sec
     """
     The refresh_token function is used to refresh the access token.
     It takes in a refresh token and returns an access_token, a new refresh_token, and the type of token (bearer).
-
-
+    
     :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
     :param db: Session: Pass the database session to the function
     :return: A dictionary with the access_token, refresh_token and token_type

@@ -3,7 +3,7 @@ import os
 from unittest.mock import MagicMock
 
 from src.database.models import User
-from src.conf.messages import ALREADY_EXISTS, EMAIL_NOT_CONFIRMED, INVALID_PASSWORD, INVALID_EMAIL
+from src.conf.messages import ALREADY_EXISTS, EMAIL_NOT_CONFIRMED, INVALID_PASSWORD, INVALID_EMAIL, USER_NOT_ACTIVE
 
 sys.path.append(os.getcwd())
 
@@ -18,7 +18,6 @@ def test_create_user(client, user, monkeypatch):
     :param user: Pass in the user data to create a new user
     :param monkeypatch: Mock the confirmed_email function
     :return: A 201 status code, which means that the user was created
-    :doc-author: Trelent
     """
     mock_send_email = MagicMock()
     monkeypatch.setattr("src.routes.auth.confirmed_email", mock_send_email)
@@ -41,7 +40,6 @@ def test_repeat_create_user(client, user):
     :param client: Make requests to the api
     :param user: Create a user in the database
     :return: A 409 status code and a message that the user already exists
-    :doc-author: Trelent
     """
     response = client.post(
         "/api/auth/signup",
@@ -64,7 +62,6 @@ def test_login_user_not_confirmed(client, user):
     :param client: Make requests to the api
     :param user: Get the user data from the fixture
     :return: A 401 status code and a message saying that the email is not confirmed
-    :doc-author: Trelent
     """
     response = client.post(
         "/api/auth/login",
@@ -73,7 +70,7 @@ def test_login_user_not_confirmed(client, user):
     assert response.status_code == 401, response.text
     data = response.json()
     assert data["detail"] == EMAIL_NOT_CONFIRMED
-
+    
 
 def test_login_user(client, session, user):
     """
@@ -88,10 +85,9 @@ def test_login_user(client, session, user):
     :param session: Create a new user in the database
     :param user: Pass the user fixture into the test function
     :return: The token_type as &quot;bearer&quot;
-    :doc-author: Trelent
     """
     current_user: User = session.query(User).filter(User.email == user.get('email')).first()
-    current_user.confirmed = True
+    current_user.is_verify = True
     session.commit()
     response = client.post(
         "/api/auth/login",
@@ -100,9 +96,33 @@ def test_login_user(client, session, user):
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["token_type"] == "bearer"
+    
+    
+def test_login_user_not_active(client, session, user):
+    """
+    The test_login_user_not_active function tests that a user cannot login if they are not active.
+        It does this by first creating a new user, then deactivating the account and attempting to login with the same credentials.
+        If successful, it will return an HTTP 403 status code and display an error message.
+    
+    :param client: Make requests to the application
+    :param session: Query the database for a user
+    :param user: Pass the user fixture to this function
+    :return: User_not_active
+    """
+    current_user: User = session.query(User).filter(User.email == user.get('email')).first()
+    current_user.is_active = False
+    session.commit()
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get('email'), "password": user.get('password')},
+    )
+    USER_NOT_ACTIVE
+    assert response.status_code == 403, response.text
+    data = response.json()
+    assert data["detail"] == USER_NOT_ACTIVE
 
 
-def test_login_wrong_password(client, user):
+def test_login_wrong_password(client, session, user):
     """
     The test_login_wrong_password function tests the login endpoint with a wrong password.
         It should return a 401 status code and an error message.
@@ -110,9 +130,10 @@ def test_login_wrong_password(client, user):
     :param client: Make requests to the api
     :param user: Pass the user data to the function
     :return: The status code 401 and the message &quot;invalid password&quot;
-    :doc-author: Trelent
     """
-
+    current_user: User = session.query(User).filter(User.email == user.get('email')).first()
+    current_user.is_active = True
+    session.commit()
     response = client.post(
         "/api/auth/login",
         data={"username": user.get('email'), "password": 'password'},
@@ -130,7 +151,6 @@ def test_login_wrong_email(client, user):
     :param client: Make requests to the app
     :param user: Create a user in the database
     :return: A 401 status code and a message
-    :doc-author: Trelent
     """
     response = client.post(
         "/api/auth/login",

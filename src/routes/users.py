@@ -30,7 +30,8 @@ async def read_my_profile(current_user: User = Depends(auth_service.get_current_
 
 
 @router.put("/edit_me/", response_model=UserDb)
-async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(None), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(None),
+                          current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     updated_user = await repository_users.edit_my_profile(avatar, new_username, current_user, db)
     return updated_user
 
@@ -38,11 +39,10 @@ async def edit_my_profile(avatar: UploadFile = File(), new_username: str = Form(
 @router.get("/all", response_model=List[UserDb], dependencies=[Depends(allowed_get_all_users)])
 async def read_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = await repository_users.get_users(skip, limit, db)
-    if not users:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return users
 
-@router.get("/users_with_username/{username}", response_model=List[UserResponseModel], dependencies=[Depends(allowed_get_all_users)])
+@router.get("/users_with_username/{username}", response_model=List[UserResponseModel],
+            dependencies=[Depends(allowed_get_user)])
 async def read_users_by_username(username: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
     users = await repository_users.get_users_with_username(username, db)
@@ -50,7 +50,8 @@ async def read_users_by_username(username: str, db: Session = Depends(get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return users
 
-@router.get("/user_profile_with_username/{username}", response_model=UserProfileModel, dependencies=[Depends(allowed_get_all_users)])
+@router.get("/user_profile_with_username/{username}", response_model=UserProfileModel,
+            dependencies=[Depends(allowed_get_user)])
 async def read_user_profile_by_username(username: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
     user_profile = await repository_users.get_user_profile(username, db)
@@ -85,7 +86,7 @@ async def ban_user_by_email(body: RequestEmail, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
     if user.is_active:
         await repository_users.ban_user(user.email, db)
-        return {"msg": USER_NOT_ACTIVE}
+        return {"message": USER_NOT_ACTIVE}
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=USER_ALREADY_NOT_ACTIVE)
 
@@ -96,9 +97,9 @@ async def make_role_by_email(body: RequestRole, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=INVALID_EMAIL)
     if body.role == user.role:
-        return {"msg": USER_ROLE_EXISTS}
+        return {"message": USER_ROLE_EXISTS}
     else:
         await repository_users.make_user_role(body.email, body.role, db)
-        return {"msg": f"{USER_CHANGE_ROLE_TO} {body.role.value}"}
+        return {"message": f"{USER_CHANGE_ROLE_TO} {body.role.value}"}
 
 
