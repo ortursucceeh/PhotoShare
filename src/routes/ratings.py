@@ -140,46 +140,6 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     return rate
 
 
-@router.get("/commented/{user_id}", response_model=List[PostResponse], dependencies=[Depends(allowed_commented_by_user)])
-async def commented_by_user(user_id: int, db: Session = Depends(get_db),
-                            current_user: User = Depends(auth_service.get_current_user)):
-
-    """
-    The commented_by_user function returns a list of posts that the user has commented on.
-        The function takes in an integer representing the user_id and two optional parameters:
-            - db: A database session object to be used for querying data from the database.
-                If not provided, a new one will be created by calling get_db().
-            - current_user: An object representing the currently logged-in user. This is obtained by calling auth_service's get_current_user() method.
-
-    :param user_id: int: Get the user id of the user that is being searched for
-    :param db: Session: Get the database session
-    :param current_user: User: Get the current user and check if they are an admin
-    :return: A list of posts that the user has commented on
-    """
-    posts = await repository_ratings.commented_by_user_posts(user_id, db, current_user)
-    if posts is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
-    return posts
-
-
-@router.get("/mine", response_model=List[PostResponse], dependencies=[Depends(allowed_commented_by_user)])
-async def commented_by_me(db: Session = Depends(get_db),
-                          current_user: User = Depends(auth_service.get_current_user)):
-
-    """
-    The commented_by_me function returns a list of posts that the current user has commented on.
-        The function takes in a database session and the current_user as parameters, and returns a list of posts.
-
-    :param db: Session: Get the database session
-    :param current_user: User: Get the current user from the database
-    :return: A list of posts that the user has commented on
-    """
-    posts = await repository_ratings.commented_by_me(db, current_user)
-    if posts is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
-    return posts
-
-
 @router.get("/post/{post_id}", response_model=float | None, dependencies=[Depends(allowed_commented_by_user)])
 async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
                       db: Session = Depends(get_db)
