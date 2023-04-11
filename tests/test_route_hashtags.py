@@ -40,8 +40,8 @@ def tag(user, token, session):
 
 @pytest.fixture()
 def body():
-    return{
-  "title": "string"
+    return {
+        "title": "string"
     }
 
 
