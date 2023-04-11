@@ -5,6 +5,7 @@ import pytest
 
 from src.database.models import User, Post
 from src.services.auth import auth_service
+from src.conf.messages import NOT_FOUND
 
 
 @pytest.fixture()
@@ -89,6 +90,16 @@ def test_transform_metod(client, post_id, body, token):
         assert data.get('transform_url') is not None
 
 
+def test_transform_metod_not_found(client, post_id, body, token):
+    with patch.object(auth_service, 'redis_cache') as r_mock:
+        r_mock.get.return_value = None
+        response = client.patch(f'/api/transformations/{post_id+1}', json=body,
+                            headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == NOT_FOUND
+
+
 def test_show_qr(client, post_id, user, token):
     with patch.object(auth_service, 'redis_cache') as r_mock:
         r_mock.get.return_value = None
@@ -97,4 +108,14 @@ def test_show_qr(client, post_id, user, token):
         assert response.status_code == 200, response.text
         data = response.json()
         assert isinstance(data, str)
+
+
+def test_show_qr_not_found(client, post_id, user, token):
+    with patch.object(auth_service, 'redis_cache') as r_mock:
+        r_mock.get.return_value = None
+        response = client.post(f'/api/transformations/qr/{post_id+1}', json=user,
+                            headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == NOT_FOUND
     

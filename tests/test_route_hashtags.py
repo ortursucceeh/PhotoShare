@@ -136,10 +136,10 @@ def test_delete(tag, client, token):
         assert "id" in data
 
 
-def test_repeat_delete_tag(client, token):
+def test_repeat_delete_tag(tag, client, token):
     with patch.object(auth_service, 'redis_cache') as r_mock:
         r_mock.get.return_value = None
-        response = client.delete(f"/api/hashtags/del/{1}",
+        response = client.delete(f"/api/hashtags/del/{tag.id-1}",
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 404, response.text
