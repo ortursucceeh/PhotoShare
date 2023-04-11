@@ -1,7 +1,5 @@
 from datetime import datetime
-from unittest.mock import MagicMock, patch
 
-import asyncio
 import pytest
 
 from src.database.models import User, Post
@@ -11,6 +9,16 @@ from src.tramsform_schemas import TransformBodyModel
 
 @pytest.fixture()
 def new_user(user, session):
+    """
+    The new_user function takes a user object and a session object as arguments.
+    It then queries the database for an existing user with the same email address.
+    If no such user exists, it creates one using the information provided in 
+    the argument 'user' and adds it to the database.
+    
+    :param user: Get the email, username and password from the user
+    :param session: Query the database for a user with the email address provided
+    :return: The new_user object
+    """
     new_user = session.query(User).filter(User.email == user.get('email')).first()
     if new_user is None:
         new_user = User(
@@ -26,6 +34,16 @@ def new_user(user, session):
 
 @pytest.fixture()
 def post(new_user, session):
+    """
+    The post function creates a new post in the database.
+        Args:
+            new_user (User): The user who created the post.
+            session (Session): A connection to the database.
+    
+    :param new_user: Create a new user
+    :param session: Access the database
+    :return: The post object
+    """
     post = session.query(Post).first()
     if post is None:
         post = Post(
@@ -45,7 +63,6 @@ def post(new_user, session):
 
 @pytest.fixture()
 def body():
-
     return {
         "circle": {
             "use_filter": True,
@@ -82,6 +99,19 @@ def body():
 
 @pytest.mark.asyncio
 async def test_transform_metod(post, body, new_user, session):
+    """
+    The test_transform_metod function tests the transform_metod function.
+        Args:
+            post (Post): A Post object with a valid id, created by the test_create_post function.
+            body (dict): A dictionary containing all of the necessary information to create a TransformBodyModel object.  This is passed into TransformBodyModel(**body) and then used in transform_metod().  The keys are 'transformation' and 'image'.  The values for these keys are strings that contain Cloudinary transformation parameters and an image URL respectively.  
+                Example: {'transformation': &quot;c_thumb
+    
+    :param post: Get the post id from the fixture
+    :param body: Pass the body of the request to be tested
+    :param new_user: Get the user_id from the database
+    :param session: Pass the session object to the function
+    :return: A string with the url of the transformed image
+    """
     body = TransformBodyModel(**body)
     part_url = "image/upload/c_thumb,g_face,h_400,w_400/r_max/e_art:audrey/c_fill,g_auto,h_400,w_400/co_rgb:FFFF00,l_text:Times_70_bold:oooohhh/fl_layer_apply,g_south,y_20/c_scale,w_400/a_vflip/a_45/Dominic"
     response = await transform_metod(post.id, body, new_user, session)
@@ -90,5 +120,15 @@ async def test_transform_metod(post, body, new_user, session):
 
 @pytest.mark.asyncio
 async def test_show_qr(post, new_user, session):
+    """
+    The test_show_qr function tests the show_qr function in views.py
+        It does this by creating a new user and post, then calling the show_qr function with those parameters.
+        The response is checked to make sure it's a string.
+    
+    :param post: Create a new post
+    :param new_user: Create a new user in the database
+    :param session: Create a new session for the user
+    :return: A string
+    """
     response = await show_qr(post.id, new_user, session)
     assert isinstance(response, str)

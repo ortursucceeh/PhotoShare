@@ -82,4 +82,4 @@ def user():
         "password": "123456789",
         "role": "Administrator",
         "avatar": "url-avatar"
-        }
+    }
