@@ -26,7 +26,6 @@ async def transform_metod(post_id: int, body: TransformBodyModel, db: Session = 
     :param db: Session: Get the database session
     :param current_user: User: Get the user id of the current user
     :return: A post with a new body and title
-    :doc-author: Trelent
     """
     post = await transform_post.transform_metod(post_id, body, current_user, db)
     if post is None:
@@ -45,7 +44,6 @@ async def show_qr(post_id: int, db: Session = Depends(get_db),
     :param db: Session: Get the database session
     :param current_user: User: Check if the user is logged in
     :return: A post object
-    :doc-author: Trelent
     """
     post = await transform_post.show_qr(post_id, current_user, db)
     if post is None:

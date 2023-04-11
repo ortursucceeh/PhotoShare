@@ -13,16 +13,30 @@ conf = ConnectionConfig(
     MAIL_FROM=EmailStr(settings.mail_from),
     MAIL_PORT=settings.mail_port,
     MAIL_SERVER=settings.mail_server,
-    MAIL_FROM_NAME="Rest API application",
+    MAIL_FROM_NAME="PhotoShare Application",
     MAIL_STARTTLS=False,
     MAIL_SSL_TLS=True,
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent.parent / 'templates',
+    TEMPLATE_FOLDER=Path(__file__).parent / 'templates',
 )
 
 
 async def send_email(email: EmailStr, username: str, host: str):
+    """
+    The send_email function sends an email to the user with a link to confirm their email address.
+        The function takes in three arguments:
+            -email: the user's email address, which is used as a unique identifier for them.
+            -username: the username of the user who is registering. This will be displayed in 
+                their confirmation message so they know it was sent to them and not someone else.
+            -host: this is where we are hosting our application, which will be used as part of 
+                our confirmation link.
+    
+    :param email: EmailStr: Specify the email address of the recipient
+    :param username: str: Pass the username of the user to be sent in the email
+    :param host: str: Pass the hostname of your application to the template
+    :return: A coroutine object
+    """
     try:
         token_verification = auth_service.create_email_token({"sub": email})
         message = MessageSchema(

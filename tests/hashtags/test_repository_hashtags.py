@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from unittest.mock import patch
 import pytest
+from unittest.mock import patch
 
-from src.database.models import User, Hashtag
 import src.repository.hashtags as repository_tag
+from src.database.models import User, Hashtag
 from src.schemas import HashtagBase
 
 
@@ -61,11 +61,6 @@ def tag(user, session):
 
 @pytest.fixture()
 def body():
-    """
-    The body function is used to generate the body of a request.
-    
-    :return: A dictionary with a title key and a string value
-    """
     return {
         "title": "string"
     }
@@ -73,11 +68,6 @@ def body():
 
 @pytest.fixture()
 def new_body():
-    """
-    The new_body function returns a dictionary with the key &quot;title&quot; and value &quot;dog&quot;.
-    
-    :return: A dictionary
-    """
     return {
         "title": "dog"
     }

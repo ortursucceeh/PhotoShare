@@ -1,10 +1,9 @@
-from datetime import datetime
+import pytest
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from src.database.models import User, Post, Hashtag
+from src.database.models import User,  Hashtag
 from src.services.auth import auth_service
+from src.conf.messages import NOT_FOUND
 
 
 @pytest.fixture()
@@ -60,11 +59,6 @@ def tag(user, token, session):
 
 @pytest.fixture()
 def body():
-    """
-    The body function is used to generate the body of a request.
-    
-    :return: A dictionary, so we can use it as the body of a request
-    """
     return {
         "title": "string"
     }
@@ -176,7 +170,7 @@ def test_read_tag_by_id_not_found(tag, client, token):
                             headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 404, response.text
         data = response.json()
-        assert data["detail"] == "Tag not found"
+        assert data["detail"] == NOT_FOUND
 
 
 def test_update_tag(tag, client, token):
@@ -222,7 +216,7 @@ def test_update_tag_not_found(tag, client, token):
                             headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 404, response.text
         data = response.json()
-        assert data["detail"] == "Tag not found"
+        assert data["detail"] == NOT_FOUND
 
 
 def test_delete(tag, client, token):
@@ -266,5 +260,5 @@ def test_repeat_delete_tag(client, token):
         )
         assert response.status_code == 404, response.text
         data = response.json()
-        assert data["detail"] == "Tag not found"
+        assert data["detail"] == NOT_FOUND
 

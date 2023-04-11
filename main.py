@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi_limiter import FastAPILimiter
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
+from src.conf.messages import DB_CONFIG_ERROR, DB_CONNECT_ERROR, WELCOME_MESSAGE
 
 from src.database.connect_db import get_db
 from src.routes.auth import router as auth_router
@@ -20,7 +21,7 @@ app = FastAPI()
 
 @app.get("/", name="Project root")
 def read_root():
-    return {"message": "Hello PhotoShare"}
+    return {"message": WELCOME_MESSAGE}
 
 
 @app.on_event("startup")
@@ -41,11 +42,11 @@ def healthchecker(db: Session = Depends(get_db)):
     try:
         result = db.execute(text("SELECT 1")).fetchone()
         if result is None:
-            raise HTTPException(status_code=500, detail="Database is not configured correctly")
-        return {"message": "Welcome to FastAPI!"}
+            raise HTTPException(status_code=500, detail=DB_CONFIG_ERROR)
+        return {"message": WELCOME_MESSAGE}
     except Exception as e:
         print(e)
-        raise HTTPException(status_code=500, detail="Error connecting to the database")
+        raise HTTPException(status_code=500, detail=DB_CONNECT_ERROR)
 
 
 app.include_router(auth_router, prefix='/api')
@@ -55,7 +56,6 @@ app.include_router(trans_router, prefix='/api')
 app.include_router(hashtag_router, prefix='/api')
 app.include_router(comment_router, prefix='/api')
 app.include_router(rating_router, prefix='/api')
-
 
 
 if __name__ == '__main__':

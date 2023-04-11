@@ -14,7 +14,6 @@ from src.conf.messages import NOT_FOUND
 
 router = APIRouter(prefix='/ratings', tags=["ratings"])
 
-# Role Checker-------------------------------------------------------------------------------------------
 
 allowed_get_all_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder])
 allowed_create_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
@@ -24,7 +23,6 @@ allowed_user_post_rate = RoleChecker([UserRoleEnum.admin])
 allowed_commented_by_user = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
 
 
-# Operational routs-------------------------------------------------------------------------------------------
 @router.post("/posts/{post_id}/{rate}", response_model=RatingModel, dependencies=[Depends(allowed_create_ratings)])
 async def create_rate(post_id: int, rate: int = Path(description="From one to five stars of rating.", ge=1, le=5),
                       db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
