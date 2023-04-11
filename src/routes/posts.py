@@ -96,9 +96,9 @@ async def read_post_comments(post_id: int, db: Session = Depends(get_db),
     return posts
 
 @router.get("/by_keyword/{keyword}", response_model=List[PostResponse])
-async def read_post_with_hashtag(keyword: str, db: Session = Depends(get_db),
+async def read_post_by_keyword(keyword: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
-    posts = await repository_posts.searcher(keyword, db)
+    posts = await repository_posts.get_post_by_keyword(keyword, db)
     if not posts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return posts

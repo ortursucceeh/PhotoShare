@@ -5,7 +5,7 @@ from typing import List
 from datetime import datetime
 from fastapi import Request, UploadFile
 from faker import Faker
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 from src.conf.config import init_cloudinary
@@ -104,7 +104,7 @@ async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> List[Post]:
     :param db: Session: Pass the database session to the function
     :return: A list of post objects that have the given hashtag
     """
-    return db.query(Post).join(Post.tags).filter(Hashtag.title == hashtag_name).all()
+    return db.query(Post).join(Post.hashtags).filter(Hashtag.title == hashtag_name).all()
 
 
 async def get_post_comments(post_id: int, db: Session) -> List[Comment]: 
@@ -148,24 +148,21 @@ def get_hashtags(hashtag_titles: list, user: User, db: Session):
     return tags
 
 
-async def searcher(keyword: str, db: Session):
+async def get_post_by_keyword(keyword: str, db: Session):
     """
-    The searcher function takes a keyword and the database as arguments.
-    It then searches through all posts in the database for any matches to the keyword,
-    and returns a list of posts that contain it.
+    The get_post_by_keyword function returns a list of posts that match the keyword.
+        The keyword is searched in both the title and description fields.
     
-    :param keyword: str: Search for the keyword in the database
-    :param db: Session: Access the database
+    :param keyword: str: Filter the posts by title or description
+    :param db: Session: Pass the database session to the function
     :return: A list of post objects
     """
-    post_list = []
-    posts_all = db.query(Post).all()
-    for post in posts_all:
-        if keyword.capitalize() in post.title.capitalize() and post not in post_list:
-            post_list.append(post)
-        if keyword.capitalize() in post.descr.capitalize() and post not in post_list:
-            post_list.append(post)
-    return post_list
+    return  db.query(Post).filter(or_(
+        func.lower(Post.title).like(f'%{keyword.lower()}%'),
+        func.lower(Post.descr).like(f'%{keyword.lower()}%')
+        )).all()
+
+    
 
 
 async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
