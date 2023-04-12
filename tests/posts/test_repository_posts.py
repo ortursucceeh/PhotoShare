@@ -240,8 +240,7 @@ async def test_get_post_comments(post, session):
     assert isinstance(response, list)
 
 
-@pytest.mark.asyncio
-def test_get_hashtags(current_user, session):
+def test_get_hashtags(current_user, session): 
     """
     The test_get_hashtags function tests the get_hashtags function in the repository_posts module.
         The test passes if a list of hashtags is returned from the database that matches what was passed into
@@ -257,7 +256,7 @@ def test_get_hashtags(current_user, session):
 
 
 @pytest.mark.asyncio
-async def test_searcher(post, session):
+async def test_get_post_by_keyword(post, session):
     """
     The test_searcher function tests the searcher function in repository_posts.py
         It creates a post with title and descr &quot;test_post&quot; and then searches for it using the keyword &quot;test_post&quot;.
@@ -269,7 +268,7 @@ async def test_searcher(post, session):
     :return: A list of posts
     """
     keyword = post.title
-    response = await repository_posts.searcher(keyword, session)
+    response = await repository_posts.get_post_by_keyword(keyword, session)
     assert isinstance(response, list)
     assert response[0].title == "test_post"
     assert response[0].descr == "test_post"
