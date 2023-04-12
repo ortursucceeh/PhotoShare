@@ -21,7 +21,12 @@ class Auth:
     ALGORITHM = settings.algorithm
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-    # redis_cache = redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0)
+    redis_cache = redis.Redis(
+        host=settings.redis_host,
+        port=settings.redis_port,
+        password=settings.redis_password,
+        db=0
+    )
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -87,20 +92,22 @@ class Auth:
             black_list_token = await repository_users.find_blacklisted_token(token, db)
             if black_list_token:
                 raise credentials_exception
+            
         except JWTError as e:
             raise credentials_exception
-
-        # user = self.redis_cache.get(f'user:{email}')
-        # if user is None:
-        # print("USER POSTGRES")
-        user = await repository_users.get_user_by_email(email, db)
+        
+        # get user from redis_cache
+        user = self.redis_cache.get(f'user:{email}')
         if user is None:
-            raise credentials_exception
-        # self.redis_cache.set(f'user:{email}', pickle.dumps(user))
-        # self.redis_cache.expire(f'user:{email}', 900)
-        # else:
-        #     print("USER CACHE")
-        #     user = pickle.loads(user)
+            print("USER POSTGRES")
+            user = await repository_users.get_user_by_email(email, db)
+            if user is None:
+                raise credentials_exception
+            self.redis_cache.set(f'user:{email}', pickle.dumps(user))
+            self.redis_cache.expire(f'user:{email}', 900)
+        else:
+            print("USER CACHE")
+            user = pickle.loads(user)
         return user
 
     async def get_email_from_token(self, token: str):

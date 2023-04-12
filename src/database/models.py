@@ -17,6 +17,7 @@ class UserRoleEnum(enum.Enum):
 
 class User(Base):
     __tablename__ = "users"
+    
     id = Column(Integer, primary_key=True)
     username = Column(String(50))
     email = Column(String(250), nullable=False, unique=True)
@@ -40,21 +41,22 @@ post_m2m_hashtag = Table(
 
 class Post(Base):
     __tablename__ = "posts"
+    
     id = Column(Integer, primary_key=True)
-    image_url = Column(String(200))
-    transform_url = Column(String(200))
+    image_url = Column(String(300))
+    transform_url = Column(Text)
     title = Column(String(50), nullable=True)
     descr = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now())
+    hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
     done = Column(Boolean, default=False)
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
-    hashtags = relationship('Hashtag', secondary=post_m2m_hashtag, backref='posts')
     public_id = Column(String(50))
 
     @aggregated('rating', Column(Numeric))
     def avg_rating(self):
-       return func.avg(Rating.rate)
+           return func.avg(Rating.rate)
     
     rating = relationship('Rating')
     user = relationship('User', backref="posts")
@@ -62,15 +64,18 @@ class Post(Base):
 
 class Hashtag(Base):
     __tablename__ = 'hashtags'
+    
     id = Column(Integer, primary_key=True)
     title = Column(String(25), nullable=False, unique=True)
     created_at = Column(DateTime, default=func.now())
     user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
+    
     user = relationship('User', backref="hashtags")
 
 
 class Comment(Base):
     __tablename__ = 'comments'
+    
     id = Column(Integer, primary_key=True)
     text = Column(Text, nullable=False)
     created_at = Column(DateTime, default=func.now())
@@ -85,6 +90,7 @@ class Comment(Base):
 
 class Rating(Base):
     __tablename__ = 'ratings'
+    
     id = Column(Integer, primary_key=True)
     rate = Column(Integer, default=0)
     created_at = Column(DateTime, default=func.now())
@@ -97,6 +103,7 @@ class Rating(Base):
 # Create Black list of access token
 class BlacklistToken(Base):
     __tablename__ = 'blacklist_tokens'
+    
     id = Column(Integer, primary_key=True)
     token = Column(String(500), unique=True, nullable=False)
     blacklisted_on = Column(DateTime, default=func.now())

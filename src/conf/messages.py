@@ -1,3 +1,7 @@
+WELCOME_MESSAGE = "Hello! It is a PhotoShare API"
+DB_CONFIG_ERROR = "Database is not configured correctly"
+DB_CONNECT_ERROR = "Error connecting to the database"
+
 NOT_FOUND = 'Not Found'
 ALREADY_EXISTS = "Account already exists"
 DOESNT_EXISTS = "Account doesn't exists"
@@ -14,9 +18,7 @@ CHECK_YOUR_EMAIL = "Check your email for confirmation."
 FAIL_EMAIL_VERIFICATION = "Invalid token for email verification"
 INVALID_SCOPE = 'Invalid scope for token'
 NOT_VALIDATE_CREDENTIALS = 'Could not validate credentials'
-DB_CONFIG_ERROR = "Database is not configured correctly"
-DB_CONNECT_ERROR = "Error connecting to the database"
-WELCOME_MESSAGE = "Welcome to FastAPI!"
+
 TOO_MANY_REQUESTS = 'No more than 10 requests per minute'
 INVALID_URL = "Invalid url"
 USER_NOT_ACTIVE = "User is banned"
@@ -31,5 +33,5 @@ COMM_NOT_FOUND = "Comment not found or not available."
 NO_RATING = "Rating not found or not available."
 OWN_POST = "It`s not possible vote for own post."
 VOTE_TWICE = "It`s not possible to vote twice."
-
+OPERATION_FORBIDDEN = "Operation forbidden"
 

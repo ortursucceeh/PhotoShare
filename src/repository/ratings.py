@@ -1,8 +1,8 @@
-from typing import List, Type
+from typing import Type
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from starlette import status
 
 from src.database.models import Rating, User, Post, UserRoleEnum
@@ -33,18 +33,15 @@ async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Ratin
         new_rate = Rating(
             post_id=post_id,
             rate=rate,
-            user_id=user.id)
-
+            user_id=user.id
+        )
         db.add(new_rate)
         db.commit()
         db.refresh(new_rate)
-        print(vars(new_rate))
-        print(type(new_rate))
         return new_rate
 
 
 async def edit_rate(rate_id: int, new_rate: int, db: Session, user: User) -> Type[Rating] | None:
-
     """
     The edit_rate function allows the user to edit a rate.
         Args:
@@ -81,7 +78,7 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
     if rate:
         db.delete(rate)
         db.commit()
-        return rate
+    return rate
 
 
 async def show_ratings(db: Session, user: User) -> list[Type[Rating]]:
@@ -130,51 +127,3 @@ async def user_rate_post(user_id: int, post_id: int, db: Session, user: User) ->
     return user_p_rate
 
 
-async def commented_by_user_posts(user_id: int, db: Session, user: User) -> list[Type[Post]] | None:
-
-    """
-    The commented_by_user_posts function returns a list of posts that have been commented on by the user with the given id.
-        Args:
-            user_id (int): The id of the user whose comments we want to find.
-            db (Session): A database session object for querying and updating data in our database.
-
-    :param user_id: int: Identify the user
-    :param db: Session: Access the database
-    :param user: User: Get the user_id of the current logged in user
-    :return: All the posts commented by a user
-    """
-    rating_by_user = db.query(Post).filter(Rating.user_id == user_id).all()
-    return rating_by_user
-
-
-async def commented_by_me(db: Session, user: User) -> list[Type[Post]] | None:
-
-    """
-    The commented_by_me function returns a list of posts that the user has commented on.
-        Args:
-            db (Session): The database session object.
-            user (User): The User object to be queried for comments made by them.
-
-    :param db: Session: Connect to the database
-    :param user: User: Identify the user who is logged in
-    :return: A list of posts that have been commented by the user
-    """
-    rating_by_me = db.query(Post).filter(Rating.user_id == user.id).all()
-    return rating_by_me
-
-
-async def post_score(post_id: int, db: Session, user: User) -> float | None:
-
-    """
-    The post_score function takes in a post_id and returns the average rating of that post.
-        Args:
-            post_id (int): The id of the Post to be rated.
-
-    :param post_id: int: Identify the post that is being rated
-    :param db: Session: Access the database
-    :param user: User: Check if the user has already rated the post
-    :return: The average rating for a given post
-    """
-    total_post_rating = db.query(Post).filter(Post.id == post_id).first()
-
-    return total_post_rating.avg_rating

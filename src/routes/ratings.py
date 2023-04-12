@@ -10,10 +10,10 @@ from src.services.auth import auth_service
 from src.services.roles import RoleChecker
 from src.database.models import User, UserRoleEnum
 from src.conf import messages as message
+from src.conf.messages import NOT_FOUND
 
 router = APIRouter(prefix='/ratings', tags=["ratings"])
 
-# Role Checker-------------------------------------------------------------------------------------------
 
 allowed_get_all_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder])
 allowed_create_ratings = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
@@ -23,7 +23,6 @@ allowed_user_post_rate = RoleChecker([UserRoleEnum.admin])
 allowed_commented_by_user = RoleChecker([UserRoleEnum.admin, UserRoleEnum.moder, UserRoleEnum.user])
 
 
-# Operational routs-------------------------------------------------------------------------------------------
 @router.post("/posts/{post_id}/{rate}", response_model=RatingModel, dependencies=[Depends(allowed_create_ratings)])
 async def create_rate(post_id: int, rate: int = Path(description="From one to five stars of rating.", ge=1, le=5),
                       db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
@@ -136,66 +135,5 @@ async def user_rate_post(user_id: int, post_id: int, db: Session = Depends(get_d
     """
     rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
     if rate is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found.")
-    return rate
-
-
-@router.get("/commented/{user_id}", response_model=List[PostResponse], dependencies=[Depends(allowed_commented_by_user)])
-async def commented_by_user(user_id: int, db: Session = Depends(get_db),
-                            current_user: User = Depends(auth_service.get_current_user)):
-
-    """
-    The commented_by_user function returns a list of posts that the user has commented on.
-        The function takes in an integer representing the user_id and two optional parameters:
-            - db: A database session object to be used for querying data from the database.
-                If not provided, a new one will be created by calling get_db().
-            - current_user: An object representing the currently logged-in user. This is obtained by calling auth_service's get_current_user() method.
-
-    :param user_id: int: Get the user id of the user that is being searched for
-    :param db: Session: Get the database session
-    :param current_user: User: Get the current user and check if they are an admin
-    :return: A list of posts that the user has commented on
-    """
-    posts = await repository_ratings.commented_by_user_posts(user_id, db, current_user)
-    if posts is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
-    return posts
-
-
-@router.get("/mine", response_model=List[PostResponse], dependencies=[Depends(allowed_commented_by_user)])
-async def commented_by_me(db: Session = Depends(get_db),
-                          current_user: User = Depends(auth_service.get_current_user)):
-
-    """
-    The commented_by_me function returns a list of posts that the current user has commented on.
-        The function takes in a database session and the current_user as parameters, and returns a list of posts.
-
-    :param db: Session: Get the database session
-    :param current_user: User: Get the current user from the database
-    :return: A list of posts that the user has commented on
-    """
-    posts = await repository_ratings.commented_by_me(db, current_user)
-    if posts is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
-    return posts
-
-
-@router.get("/post/{post_id}", response_model=float | None, dependencies=[Depends(allowed_commented_by_user)])
-async def post_rating(post_id: int, current_user: User = Depends(auth_service.get_current_user),
-                      db: Session = Depends(get_db)
-                      ):
-
-    """
-    The post_rating function is used to rate a post.
-        The function takes in the post_id and current_user as parameters,
-        and returns the rating of that particular user on that particular post.
-
-    :param post_id: int: Get the post id from the url
-    :param current_user: User: Get the user who is currently logged in
-    :param db: Session: Get the database session
-    :return: A rating object
-    """
-    rate = await repository_ratings.post_score(post_id, db, current_user)
-    if rate is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=message.NO_RATING)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
     return rate
