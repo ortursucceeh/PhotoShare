@@ -1,8 +1,8 @@
-from typing import List, Type
+from typing import Type
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from starlette import status
 
 from src.database.models import Rating, User, Post, UserRoleEnum

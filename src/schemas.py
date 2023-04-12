@@ -141,7 +141,7 @@ class PostModel(PostBase):
 class PostUpdate(BaseModel):
     title: str = Field(max_length=45)
     descr: str = Field(max_length=450)
-    hashtags: List[str] = []
+    hashtags: List[str]
     
 
 class PostResponse(PostBase):

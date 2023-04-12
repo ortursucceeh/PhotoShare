@@ -1,16 +1,17 @@
+from typing import List
+from datetime import datetime
+
 import cloudinary
 import cloudinary.uploader
 
-from typing import List
-from datetime import datetime
 from fastapi import Request, UploadFile
 from faker import Faker
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 from src.conf.config import init_cloudinary
-from src.database.models import Post, Hashtag, User, Comment, Rating, UserRoleEnum
-from src.schemas import PostModel, PostUpdate
+from src.database.models import Post, Hashtag, User, Comment, UserRoleEnum
+from src.schemas import PostUpdate
 
 
 async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
@@ -199,8 +200,6 @@ async def get_post_by_keyword(keyword: str, db: Session):
         )).all()
 
     
-
-
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:
     """
     The update_post function updates a post in the database.
