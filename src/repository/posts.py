@@ -13,6 +13,42 @@ from src.database.models import Post, Hashtag, User, Comment, Rating, UserRoleEn
 from src.schemas import PostModel, PostUpdate
 
 
+async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
+    """
+    The create_post function creates a new post in the database.
+    
+    :param request: Request: Get the request object, which contains information about the incoming http request
+    :param title: str: Get the title of the post from the request
+    :param descr: str: Get the description of the post
+    :param hashtags: List: Get the hashtags from the request body
+    :param file: UploadFile: Get the file from the request and upload it to cloudinary
+    :param db: Session: Access the database
+    :param current_user: User: Get the user_id of the current user
+    :return: A post object
+    """
+    public_id = Faker().first_name()
+    init_cloudinary()
+    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
+    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
+    if hashtags:
+        hashtags = get_hashtags(hashtags[0].split(","), current_user, db)
+    
+    post = Post(
+        image_url = url,
+        title = title,
+        descr = descr,
+        created_at = datetime.now(),
+        user_id = current_user.id,
+        hashtags = hashtags,
+        public_id = public_id,
+        done=True
+    )
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return post
+
+
 async def get_all_posts(skip: int, limit: int, db: Session) -> List[Post]:
     """
     The get_all_posts function returns a list of all posts in the database.
@@ -163,42 +199,6 @@ async def get_post_by_keyword(keyword: str, db: Session):
         )).all()
 
     
-
-
-async def create_post(request: Request, title: str, descr: str, hashtags: List, file: UploadFile, db: Session, current_user: User) -> Post:
-    """
-    The create_post function creates a new post in the database.
-    
-    :param request: Request: Get the request object, which contains information about the incoming http request
-    :param title: str: Get the title of the post from the request
-    :param descr: str: Get the description of the post
-    :param hashtags: List: Get the hashtags from the request body
-    :param file: UploadFile: Get the file from the request and upload it to cloudinary
-    :param db: Session: Access the database
-    :param current_user: User: Get the user_id of the current user
-    :return: A post object
-    """
-    public_id = Faker().first_name()
-    init_cloudinary()
-    cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
-    url = cloudinary.CloudinaryImage(public_id).build_url(width=250, height=250, crop='fill')
-    if hashtags:
-        hashtags = get_hashtags(hashtags[0].split(","), current_user, db)
-    
-    post = Post(
-        image_url = url,
-        title = title,
-        descr = descr,
-        created_at = datetime.now(),
-        user_id = current_user.id,
-        hashtags = hashtags,
-        public_id = public_id,
-        done=True
-    )
-    db.add(post)
-    db.commit()
-    db.refresh(post)
-    return post
 
 
 async def update_post(post_id: int, body: PostUpdate, user: User, db: Session) -> Post | None:

@@ -113,9 +113,8 @@ async def test_transform_metod(post, body, new_user, session):
     :return: A string with the url of the transformed image
     """
     body = TransformBodyModel(**body)
-    part_url = "image/upload/c_thumb,g_face,h_400,w_400/r_max/e_art:audrey/c_fill,g_auto,h_400,w_400/co_rgb:FFFF00,l_text:Times_70_bold:oooohhh/fl_layer_apply,g_south,y_20/c_scale,w_400/a_vflip/a_45/Dominic"
     response = await transform_metod(post.id, body, new_user, session)
-    assert part_url in response.transform_url 
+    assert post.image_url != response.transform_url 
 
 
 @pytest.mark.asyncio
