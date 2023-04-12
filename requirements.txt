@@ -8,7 +8,7 @@ alembic
 pydantic[dotenv]
 python-jose[cryptography]
 python-multipart
-passlib["bcrypt"]
+passlib[bcrypt]
 redis 
 fastapi-limiter 
 cloudinary 
