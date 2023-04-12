@@ -198,7 +198,7 @@ async def read_post_comments(post_id: int, db: Session = Depends(get_db),
 
 
 @router.get("/by_keyword/{keyword}", response_model=List[PostResponse])
-async def read_post_by_keyword(keyword: str, db: Session = Depends(get_db),
+async def read_posts_by_keyword(keyword: str, db: Session = Depends(get_db),
             current_user: User = Depends(auth_service.get_current_user)):
     """
     The read_post_by_keyword function returns a list of posts that contain the keyword in their title or body.

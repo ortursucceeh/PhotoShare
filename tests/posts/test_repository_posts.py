@@ -1,13 +1,11 @@
 from datetime import datetime
-from fastapi import Request, UploadFile
-from unittest.mock import MagicMock, patch
 
-import asyncio
 import pytest
 import io
+from fastapi import Request, UploadFile
 from PIL import Image
 
-from src.database.models import User, Post, Hashtag
+from src.database.models import User, Post
 import src.repository.posts as repository_posts
 from src.schemas import PostUpdate
 

@@ -127,7 +127,8 @@ async def get_posts_by_username(user_name: str, db: Session) -> List[Post]:
     :return: A list of posts by the username provided
     """
     searched_user = db.query(User).filter(func.lower(User.username).like(f'%{user_name.lower()}%')).first()
-    return db.query(Post).filter(Post.user_id == searched_user.id).all()
+    if searched_user:
+        return db.query(Post).filter(Post.user_id == searched_user.id).all()
 
 
 async def get_posts_with_hashtag(hashtag_name: str, db: Session) -> List[Post]: 

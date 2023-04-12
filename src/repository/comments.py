@@ -22,7 +22,6 @@ async def create_comment(post_id: int, body: CommentBase, db: Session, user: Use
     :param db: Session: Access the database
     :param user: User: Get the user_id from the logged in user
     :return: A comment object
-
     """
     new_comment = Comment(text=body.text, post_id=post_id, user_id=user.id)
     db.add(new_comment)

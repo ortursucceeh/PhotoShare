@@ -12,7 +12,7 @@ def init_cloudinary():
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresqlurl"
+    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"

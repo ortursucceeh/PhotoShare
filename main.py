@@ -21,11 +21,23 @@ app = FastAPI()
 
 @app.get("/", name="Project root")
 def read_root():
+    """
+    The read_root function returns a dictionary with the key &quot;message&quot; and value WELCOMES_MESSAGE.
+        This is used to display a welcome message when the user visits the root of our API.
+    
+    :return: A dictionary
+    """
     return {"message": WELCOME_MESSAGE}
 
 
 @app.on_event("startup")
 async def startup():
+    """
+    The startup function is called when the application starts up.
+    It's a good place to initialize things that are used by the app, like caches or databases.
+    
+    :return: A coroutine, so we need to wrap it in asyncio
+    """
     redis_cache = await redis.Redis(
         host=settings.redis_host,
         port=settings.redis_port,
@@ -39,6 +51,13 @@ async def startup():
 
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
+    """
+    The healthchecker function is used to check the health of the database.
+    It returns a welcome message if it can connect to the database, and an error message otherwise.
+    
+    :param db: Session: Pass the database session to the function
+    :return: A dict with a message
+    """
     try:
         result = db.execute(text("SELECT 1")).fetchone()
         if result is None:
