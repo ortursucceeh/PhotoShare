@@ -1,4 +1,4 @@
-# Project "PhotoShare"
+# Project "PhotoShare" 📷
 
 <p align="center">
       <img src="" width="900">
@@ -10,16 +10,16 @@
    <img src="https://img.shields.io/badge/License-MIT-yellow">
 </p>
 
-## About
+## About ✨
 
-#### PhotoShare
+#### PhotoShare 
 PhotoShare is a web application that allows users to create an account, upload posts with photos, use hashtags, leave comments, and rate posts. The application is built using the FastAPI framework and uses SQLAlchemy as the database ORM.
 
-## Documentation
+## Documentation 📗
  - [Documentation link](https://ortursucceeh.github.io/Project-PhotoShare/)
 
 
-## Installation
+## Installation 💻
 To run this project, follow these steps:
 
 1. Clone this repository to your local machine;
@@ -28,11 +28,11 @@ To run this project, follow these steps:
 4. Start the server by running ```uvicorn main:app --reload```
 
 
-## Usage
+## Usage 💠
 This project exposes 40+ endpoints through a REST API. To access these APIs, use any API client, such as Postman or cURL. The API documentation can be found at [documentation](https://ortursucceeh.github.io/Project-PhotoShare/).
 
 
-## Developers
+## Developers :octocat:
 
 <div align="">
   <a href="https://github.com/ortursucceeh">ortursucceeh</a><br>
@@ -44,5 +44,5 @@ This project exposes 40+ endpoints through a REST API. To access these APIs, use
 </div>
 
 
-## License
+## License 🔱
 Project "PhotoShare" is distributed under the MIT license.
