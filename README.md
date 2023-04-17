@@ -1,12 +1,14 @@
 # Project "PhotoShare" 📷
 
 <p align="center">
-      <img src="https://i.pinimg.com/originals/06/db/1f/06db1f35d808b47687b4c833551f6572.png" width="900">
+      <img src="https://i.pinimg.com/originals/f6/c1/8e/f6c18ef155b51a6aa722115946f9a142.png" width="900">
 </p>
 
 <p align="center">
-   <img src="https://img.shields.io/badge/Language-Python-brightgreen">
-   <img src="https://img.shields.io/badge/Version-3.9-blue">
+   <img src="https://img.shields.io/badge/Language-Python-9cf">
+   <img src="https://img.shields.io/badge/FastAPI-0.95.1-brightgreen">
+   <img src="https://img.shields.io/badge/SQLAlchemy-2.0-orange">
+   <img src="https://img.shields.io/badge/Pytest-7.3.0-informational">
    <img src="https://img.shields.io/badge/License-MIT-yellow">
 </p>
 
