@@ -1,7 +1,7 @@
 # Project "PhotoShare" 📷
 
 <p align="center">
-      <img src="https://i.pinimg.com/originals/f6/c1/8e/f6c18ef155b51a6aa722115946f9a142.png" width="900">
+      <img src="https://i.pinimg.com/originals/0b/ba/ef/0bbaeface0390e5a675f97a812deeb0f.png" width="1000">
 </p>
 
 <p align="center">
