@@ -17,6 +17,9 @@
 #### PhotoShare 
 PhotoShare is a web application that allows users to create an account, upload posts with photos, use hashtags, leave comments, and rate posts. The application is built using the FastAPI framework and uses SQLAlchemy as the database ORM.
 
+## Deployment
+- [Live PhotoShare](https://photoshare-ortursucceeh.koyeb.app/docs)
+
 ## Documentation 📗
  - [Documentation link](https://ortursucceeh.github.io/Project-PhotoShare/)
 
